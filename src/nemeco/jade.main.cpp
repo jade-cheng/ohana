@@ -1,0 +1,137 @@
+/* -------------------------------------------------------------------------
+   Ohana
+   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Jade Cheng <info@jade-cheng.com>                              (='.'=)
+   ------------------------------------------------------------------------- */
+
+#include "jade.optimizer.hpp"
+#include "jade.version.hpp"
+
+namespace
+{
+    char const * const usage = R"(USAGE
+nemeco [options] <g-matrix> <f-matrix>
+
+ARGUMENTS
+g-matrix                      the path to a genotype matrix
+f-matrix                      the path to the frequency matrix
+
+OPTIONS
+--cin,-ci                     indicates the next argument is the path to the
+                              initial covariance matrix; this option cannot
+                              be specified with the --tin option
+--cout,-co                    indicates the next argument is the path to the
+                              [k-1 x k-1] output covariance matrix
+--epsilon,-e (1)              indicates the next argument is the epsilon
+                              value; i.e. the minimum difference between
+                              likelihood; this value must be greater than or
+                              equal to zero
+--help,-h                     shows this help message
+--max-iterations,-mi (100)    indicates the next argument is the maximum
+                              number of iterations to execute the algorithm;
+                              this value must be greater than zero
+--max-time,-mt (60.0)         indicates the next argument is the maximum time
+                              in seconds to execute the algorithm; this value
+                              must be greater than or equal to zero
+--num-threads,-nt (1)         indicates the next argument is the number of
+                              threads to request for OpenBLAS operations;
+                              this value must be greater than zero
+--tin, -ti                    indicates the next argument is the path to the
+                              file that defines the input tree structure; the
+                              file is in Newick format; this option cannot
+                              be specified with the --cin option
+--tout, -to                   indicates the next argument is the path to the
+                              output file containing the tree structure; the
+                              file is in Newick format; this option cannot be
+                              specified without the --tin option
+
+DESCRIPTION
+Models the joint distribution of the allele frequencies as a variant of a
+multivariate Gaussian and infers its covariance matrix using the Nelder-Mead
+optimization method.
+
+[Notation]
+
+K := Number of Populations
+   This value must be greater than or equal to two.
+
+I := Number of Individuals
+   This value must be greater than or equal to two.
+
+J := Number of Markers
+   This value must be greater than or equal to two.
+
+G := [I x J] Discrete or Likelihood Genotype Matrix
+   dgm consists of integer values ranging from 0 to 3, inclusive.
+     0 := major-major allele
+     1 := major-minor allele
+     2 := minor-minor allele
+     3 := missing allele information
+   lgm with three floating-point value matrices in the following order.
+     n x m matrix, values 0.0 to 1.0 for minor-minor
+     n x m matrix, values 0.0 to 1.0 for major-minor
+     n x m matrix, values 0.0 to 1.0 for major-major
+
+F := [K x J] Frequency Matrix
+   This matrix consists of floating-point values ranging from 0 to 1.
+
+C := [K-1 x K-1] Rooted Covariance Matrix
+   This matrix consists of floating-point values.  It is a symmetric and
+   positive semidefinite matrix.
+
+EXAMPLES
+$ nemeco -mi 3 -e 0 -co ./cout.matrix g.matrix f.matrix
+iter    duration    delta-log       log-likelihood
+1       0.005124    0.000000e+00    -6.190334e+04
+2       0.000044    0.000000e+00    -6.190334e+04
+3       0.000042    0.000000e+00    -6.190334e+04
+
+log likelihood = -61903.3
+Writing C matrix to ./cout.matrix
+
+BUGS
+Report any bugs to Jade Cheng <info@jade-cheng.com>.
+
+Copyright (c) 2015-2016 Jade Cheng
+)";
+}
+
+///
+/// The main entry point of the program.
+/// \param argc The argument count.
+/// \param argv The argument values.
+/// \return     EXIT_SUCCESS or EXIT_FAILURE.
+///
+int main(const int argc, const char * argv[])
+{
+    try
+    {
+        jade::args args (argc, argv);
+
+        if (args.read_flag("--help", "-h"))
+        {
+            std::cout << ::usage;
+            return EXIT_SUCCESS;
+        }
+
+        if (args.read_flag("--version", "-v"))
+        {
+            jade::version::write("nemeco", std::cout);
+            return EXIT_SUCCESS;
+        }
+
+        typedef double                            value_type;
+        typedef jade::basic_settings<value_type>  settings_type;
+        typedef jade::basic_optimizer<value_type> optimizer_type;
+
+        const settings_type settings (args);
+        optimizer_type::execute(settings);
+
+        return EXIT_SUCCESS;
+    }
+    catch (const std::exception & e)
+    {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
+}
