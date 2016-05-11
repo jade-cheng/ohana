@@ -980,8 +980,8 @@ namespace jade
         inline static void set_high_precision(
                 std::ostream & out) ///< The output stream.
         {
-            static const auto precision = std::min(6, 1 +
-                std::numeric_limits<value_type>::digits10);
+            static const auto precision =
+                1 + std::numeric_limits<value_type>::digits10;
 
             out << std::scientific <<  std::setprecision(precision);
         }
