@@ -18,7 +18,7 @@ ARGUMENTS
   c-matrix     path to the [K-1 x K-1] global C matrix
 
 OPTIONS
-  --steps,-s (10)    the number of steps to interpolate between C matrices
+  --steps,-s (100)   the number of steps to interpolate between C matrices
   --help,-h          shows this help message and exits
   --c-scale,-cs      indicates the next argument is the path to a [K-1 x K-1] C
                      matrix that provides scaling information; each step
@@ -29,7 +29,7 @@ DESCRIPTION
   Performs a selection scan to identify covariance outliers and prints for each
   marker the step number when local optima is reached, the global likelihood,
   the optimal local likelihood, and the likelihood ratio. By default, the
-  program linearly interpolates between the global C matrix and two times its
+  program linearly interpolates between the global C matrix and 10 times its
   values, but it is possible to specify a scaling matrix using the --c-scale
   option.
 

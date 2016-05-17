@@ -41,7 +41,7 @@ namespace jade
         ///
         explicit basic_selscan(
                 args & a) ///< The command-line arguments.
-            : steps     (a.read("--steps", "-s", size_t(10)))
+            : steps     (a.read("--steps", "-s", size_t(100)))
             , g_ptr     (genotype_matrix_factory_type::create(a.pop<std::string>()))
             , g         (*g_ptr)
             , fa        (a.pop<std::string>())
@@ -188,7 +188,7 @@ namespace jade
                 const matrix_type & c1)
         {
             const auto path = a.read<std::string>("--c-scale", "-cs");
-            return path.empty() ? value_type(2) * c1 : matrix_type(path);
+            return path.empty() ? value_type(10) * c1 : matrix_type(path);
         }
 
         // --------------------------------------------------------------------

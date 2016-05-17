@@ -199,7 +199,9 @@ With the inferred population covariances and allele frequencies, we scan for cov
     +1.000000e+00   +1.769128e+00   +1.769128e+00   +0.000000e+00
     +1.000000e+00   +1.213023e+00   +1.213023e+00   +0.000000e+00
 
-The workflow described above is for demonstration purposes only.  For real data analysis, the structure inference using `qpas` would include many fewer loci than a selection scan using `selscan`, which would require multiple millions of loci.  What's shown above, a scan of allele frequencies produced directly from the structure analysis, would be inadequate.  If selection study is the goal, the first step should be to obtain a full genome dataset of high quality.  Then a subset of this data, ~100 Kbp unlinked markers, should be used for the structure analysis with `qpas`.  After that, the `-fq` and `-qi` options should be used for `qpas` to produce admixture-corrected allele frequencies for the full genome dataset.  Finally, it should be possible to proceed to the selection study with full genome allele frequencies.
+The workflow described above is for demonstration purposes only.  For real data analysis, the structure inference using `qpas` would include many fewer loci than a selection scan using `selscan`, which would require multiple millions of loci.  What's shown above, a scan of allele frequencies produced directly from the structure analysis, would be inadequate.
+
+If selection study is the goal, the first step should be to obtain a full genome dataset of high quality.  Then a subset of this data, ~100 Kbp unlinked markers, should be used for the structure analysis with `qpas`.  After that, the `-fq` and `-qi` options should be used for `qpas` to produce admixture-corrected allele frequencies for the full genome dataset.  Finally, it should be possible to proceed to the selection study with full genome allele frequencies.
 
     $ qpas ./g_subset.lgm -k 4 -qo ./q_subset.matrix -fo ./f_subset.matrix -mi 5
     :
@@ -209,6 +211,32 @@ The workflow described above is for demonstration purposes only.  For real data 
     :
     $ selscan ./g_full.dgm ./f_full.matrix cout.matrix
     :
+
+For faster analysis and smaller memory footprints, we recommend performing the last two steps in parallel.  For example, suppose we have the full genome dataset `HGDP.ped`, we have split it into three pieces, each containing 1/3 of the markers, and the files are named `HGDP1.ped`, `HGDP2.ped`, and `HGDP3.ped`.
+
+We first down-sample the full dataset to perform structure analysis and then infer the population covariances.
+
+    python ./sample-sites.py ./HGDP.dgm 5 ./HGDP_5percent.dgm
+    qpas ./HGDP_5percent.dgm -e 0.0001 -k 7 -qo ./HGDP_5percent_Q.matrix -fo ./HGDP_5percent_F.matrix
+    nemeco ./HGDP_5percent.dgm ./HGDP_5percent_F.matrix -e 0.0 -co ./HGDP_5percent_C.matrix
+
+We then produce admixture-corrected allele frequencies and perform the selection scan separately, possibly in parallel.
+
+    convert ped2dgm ./HGDP1.ped ./HGDP1.dgm
+    convert ped2dgm ./HGDP2.ped ./HGDP2.dgm
+    convert ped2dgm ./HGDP3.ped ./HGDP3.dgm
+
+    qpas ./HGDP1.dgm -qi ./HGDP_5percent_Q.matrix -fo ./HGDP1_F.matrix -e 0.0001 -fq
+    qpas ./HGDP2.dgm -qi ./HGDP_5percent_Q.matrix -fo ./HGDP2_F.matrix -e 0.0001 -fq
+    qpas ./HGDP3.dgm -qi ./HGDP_5percent_Q.matrix -fo ./HGDP3_F.matrix -e 0.0001 -fq
+
+    selscan ./HGDP1.dgm ./HGDP1_F.matrix ./HGDP_5percent_C.matrix > scan1.txt
+    selscan ./HGDP2.dgm ./HGDP2_F.matrix ./HGDP_5percent_C.matrix > scan2.txt
+    selscan ./HGDP3.dgm ./HGDP3_F.matrix ./HGDP_5percent_C.matrix > scan3.txt
+
+    cat scan*.txt > scan_all.txt
+
+The file `scan_all.txt` contains selection results for the full dataset with markers following the order defined in HGDP.ped.  
 
 ## License
 Copyright (c) 2015-2016 Jade Cheng<br>
