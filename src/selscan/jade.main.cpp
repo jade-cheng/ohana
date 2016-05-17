@@ -10,71 +10,78 @@
 namespace
 {
     char const * const usage = R"(USAGE
-selscan [options] <g-matrix> <f-matrix> <c-matrix>
+  selscan [options] <g-matrix> <f-matrix> <c-matrix>
 
 ARGUMENTS
-g-matrix    path to the [N x M] G matrix
-f-matrix    path to the [K x M] F matrix
-c-matrix    path to the [K-1 x K-1] C matrix
+  g-matrix     path to the [N x M] G matrix
+  f-matrix     path to the [K x M] F matrix
+  c-matrix     path to the [K-1 x K-1] global C matrix
 
 OPTIONS
---begin,-b (1.0)   the first scaling value
---count,-c (10)    the number of scaling values to test per marker
---help,-h          shows this help message and exits
---step,-s (0.1)    the step size to take when iterating the scaling ratio
+  --steps,-s (10)    the number of steps to interpolate between C matrices
+  --help,-h          shows this help message and exits
+  --c-scale,-cs      indicates the next argument is the path to a [K-1 x K-1] C
+                     matrix that provides scaling information; each step
+                     linearly interpolates between the global C matrix and this
+                     matrix
 
 DESCRIPTION
-Performs a selection scan to identify covariance outliers.
+  Performs a selection scan to identify covariance outliers and prints for each
+  marker the step number when local optima is reached, the global likelihood,
+  the optimal local likelihood, and the likelihood ratio. By default, the
+  program linearly interpolates between the global C matrix and two times its
+  values, but it is possible to specify a scaling matrix using the --c-scale
+  option.
 
-There are 'n' individuals, 'k' populations, and 'm' markers. The sizes of
-the matrices evaluated by this program are:
+  There are 'n' individuals, 'k' populations, and 'm' markers. The sizes of
+  the matrices evaluated by this program are:
 
-G matrix    [N x M]     the path to a genotype matrix; the format of the file
-                        is determined based on the extension,
-                          .dgm (discrete genotype matrix) or
-                          .lgm (likelihood genotype matrix)
-F matrix    [K x M]     floating-point values ranging from 0.0 to 1.0
-C matrix    [K-1 x K-1] floating-point values; the matrix is symmetric and
-                        positive semidefinite
+  G matrix    [N x M]     the path to a genotype matrix; the format of the file
+                          is determined based on the extension,
+                            .dgm (discrete genotype matrix) or
+                            .lgm (likelihood genotype matrix)
+  F matrix    [K x M]     floating-point values ranging from 0.0 to 1.0
+  C matrix    [K-1 x K-1] floating-point values; the matrix is symmetric and
+                          positive semidefinite
 
-[Notation]
+  [Notation]
 
-K := Number of Populations
-   This value must be greater than or equal to two.
+  K := Number of Populations
+     This value must be greater than or equal to two.
 
-I := Number of Individuals
-   This value must be greater than or equal to two.
+  I := Number of Individuals
+     This value must be greater than or equal to two.
 
-J := Number of Markers
-   This value must be greater than or equal to two.
+  J := Number of Markers
+     This value must be greater than or equal to two.
 
-G := [I x J] Discrete or Likelihood Genotype Matrix
-   dgm consists of integer values ranging from 0 to 3, inclusive.
-     0 := major-major allele
-     1 := major-minor allele
-     2 := minor-minor allele
-     3 := missing allele information
-   lgm with three floating-point value matrices in the following order.
-     n x m matrix, values 0.0 to 1.0 for minor-minor
-     n x m matrix, values 0.0 to 1.0 for major-minor
-     n x m matrix, values 0.0 to 1.0 for major-major
+  G := [I x J] Discrete or Likelihood Genotype Matrix
+     dgm consists of integer values ranging from 0 to 3, inclusive.
+       0 := major-major allele
+       1 := major-minor allele
+       2 := minor-minor allele
+       3 := missing allele information
+     lgm with three floating-point value matrices in the following order.
+       n x m matrix, values 0.0 to 1.0 for minor-minor
+       n x m matrix, values 0.0 to 1.0 for major-minor
+       n x m matrix, values 0.0 to 1.0 for major-major
 
-F := [K x J] Frequency Matrix
-   This matrix consists of floating-point values ranging from 0 to 1.
+  F := [K x J] Frequency Matrix
+     This matrix consists of floating-point values ranging from 0 to 1.
 
-C := [K-1 x K-1] Rooted Covariance Matrix
-   This matrix consists of floating-point values.  It is a symmetric and
-   positive semidefinite matrix.
+  C := [K-1 x K-1] Rooted Covariance Matrix
+     This matrix consists of floating-point values.  It is a symmetric and
+     positive semidefinite matrix.
 
 EXAMPLE
-$ selscan g.dgm f.matrix c.matrix
-scalar           global-lle      local_lle       lle-ratio
-+1.000000e+00   +1.418028e+00   +1.418028e+00   +0.000000e+00
-+1.000000e+00   +1.769128e+00   +1.769128e+00   +0.000000e+00
-+1.000000e+00   +1.213023e+00   +1.213023e+00   +0.000000e+00
+  $ selscan g.dgm f.matrix c.matrix
+  step    global-lle      local-lle       lle-ratio
+  0       +1.418028e+00   +1.418028e+00   +0.000000e+00
+  2       +1.769128e+00   +1.769128e+00   +0.000000e+00
+  0       +1.213023e+00   +1.213023e+00   +0.000000e+00
 
 BUGS
-Report any bugs to Jade Cheng <info@jade-cheng.com>.
+  Report any bugs to Jade Cheng <info@jade-cheng.com>.
 
 Copyright (c) 2015-2016 Jade Cheng
 )";

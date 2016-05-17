@@ -41,35 +41,32 @@ namespace jade
         ///
         explicit basic_selscan(
                 args & a) ///< The command-line arguments.
-            : a_begin   (a.read("--begin", "-b", value_type(1)))
-            , a_count   (a.read("--count", "-c", size_t(10)))
-            , a_step    (a.read("--step", "-s",  value_type(0.1)))
+            : steps     (a.read("--steps", "-s", size_t(10)))
             , g_ptr     (genotype_matrix_factory_type::create(a.pop<std::string>()))
             , g         (*g_ptr)
             , fa        (a.pop<std::string>())
-            , c         (a.pop<std::string>())
-            , RK        (c.get_width())
+            , c1        (a.pop<std::string>())
+            , c2        (_init_scaling_matrix(a, c1))
+            , RK        (c1.get_width())
             , J         (g.get_width())
             , mu        (g.create_mu())
             , rooted_fa (_compute_rooted_fa(fa))
             , c_inv     (RK, RK)
             , f_j_c_inv (RK, 1)
         {
+            if (steps < 2)
+                throw error() << "invalid value for --steps option ("
+                              << steps << "); expected at least two steps";
+
             a.validate_empty();
 
             verification_type::validate_g(g);
             verification_type::validate_f(fa);
-            verification_type::validate_c(c);
+            verification_type::validate_c(c1);
+            verification_type::validate_c(c2);
             verification_type::validate_gf_sizes(g, fa);
-            verification_type::validate_fc_sizes(fa, c);
-
-            if (a_begin < value_type(0))
-                throw error() << "invalid value for --begin option ("
-                              << a_begin << ")";
-
-            if (a_step <= value_type(0))
-                throw error() << "invalid value for --step option ("
-                              << a_step << ")";
+            verification_type::validate_fc_sizes(fa, c1);
+            verification_type::validate_fc_sizes(fa, c2);
         }
 
         ///
@@ -77,29 +74,22 @@ namespace jade
         ///
         void execute()
         {
-            std::cout << "scalar\tglobal-lle\tlocal-lle\tlle-ratio\n";
+            std::cout << "step\tglobal-lle\tlocal-lle\tlle-ratio\n";
 
             std::vector<record> records;
             records.reserve(J);
             for (size_t j = 0; j < J; j++)
-                records.emplace_back(j, _compute_score(value_type(1), j));
+                records.emplace_back(j, _compute_score(0, j));
 
-            for (size_t ai_ = 0; ai_ < a_count; ai_++)
-            {
-                const auto ai = static_cast<value_type>(ai_);
-                const auto a  = a_begin + (ai * a_step);
-
+            for (size_t si = 0; si < steps; si++)
                 for (auto & r : records)
-                    r.update(a, _compute_score(a, r.get_j()));
-            }
+                    r.update(si, _compute_score(si, r.get_j()));
 
             for (const auto & r : records)
-            {
-                std::cout << _format(r.get_a())          << '\t'
+                std::cout << _format(r.get_step())       << '\t'
                           << _format(r.get_score())      << '\t'
                           << _format(r.get_best_score()) << '\t'
                           << _format(r.get_lle_ratio())  << '\n';
-            }
         }
 
     private:
@@ -124,13 +114,14 @@ namespace jade
 
         // --------------------------------------------------------------------
         value_type _compute_score(
-                const value_type scale,
-                const size_t     j)
+                const size_t si,
+                const size_t j)
         {
             typedef typename matrix_type::openblas_type openblas_type;
 
+            const auto percent = value_type(si) / value_type(steps - 1);
             for (size_t i = 0; i < RK * RK; i++)
-                c_inv[i] = scale * c[i];
+                c_inv[i] = c1[i] + percent * (c2[i] - c1[i]);
 
             auto log_c_det = value_type(0);
             _invert(c_inv, log_c_det);
@@ -192,6 +183,15 @@ namespace jade
         }
 
         // --------------------------------------------------------------------
+        static matrix_type _init_scaling_matrix(
+                args &              a,
+                const matrix_type & c1)
+        {
+            const auto path = a.read<std::string>("--c-scale", "-cs");
+            return path.empty() ? value_type(2) * c1 : matrix_type(path);
+        }
+
+        // --------------------------------------------------------------------
         static bool _invert(matrix_type & c, value_type & log_c_det)
         {
             const auto rk = c.get_height();
@@ -236,18 +236,12 @@ namespace jade
         public:
             // ----------------------------------------------------------------
             inline record(const size_t j, const value_type score)
-                : _a          (std::numeric_limits<value_type>::quiet_NaN())
-                , _best_score (std::numeric_limits<value_type>::lowest())
+                : _best_score (std::numeric_limits<value_type>::lowest())
                 , _j          (j)
                 , _lle_ratio  (std::numeric_limits<value_type>::quiet_NaN())
                 , _score      (score)
+                , _step       (std::numeric_limits<size_t>::max())
             {
-            }
-
-            // ----------------------------------------------------------------
-            inline value_type get_a() const
-            {
-                return _a;
             }
 
             // ----------------------------------------------------------------
@@ -275,31 +269,36 @@ namespace jade
             }
 
             // ----------------------------------------------------------------
-            inline void update(const value_type a, const value_type score)
+            inline size_t get_step() const
+            {
+                return _step;
+            }
+
+            // ----------------------------------------------------------------
+            inline void update(const size_t step, const value_type score)
             {
                 if (score <= _best_score)
                     return;
 
-                _a          = a;
+                _step       = step;
                 _best_score = score;
                 _lle_ratio  = value_type(2) * (score - _score);
             }
 
         private:
-            value_type _a;
             value_type _best_score;
             size_t     _j;
             value_type _lle_ratio;
             value_type _score;
+            size_t     _step;
         };
 
-        const value_type             a_begin;
-        const size_t                 a_count;
-        const value_type             a_step;
+        const size_t                 steps;
         const genotype_matrix_ptr    g_ptr;
         const genotype_matrix_type & g;
         const matrix_type            fa;
-        const matrix_type            c;
+        const matrix_type            c1;
+        const matrix_type            c2;
         const size_t                 RK;
         const size_t                 J;
         const matrix_type            mu;

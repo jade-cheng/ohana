@@ -69,6 +69,8 @@ namespace jade
 
             a.validate_empty();
 
+            openblas_set_num_threads(int(_opts.get_num_threads()));
+
             if (_opts.is_qin_specified())
             {
                 _q.read(_opts.get_qin());
@@ -105,9 +107,6 @@ namespace jade
 
             if (_opts.is_force_specified())
                 _fg->validate_q(_q);
-
-            if (_opts.is_num_threads_specified())
-                openblas_set_num_threads(int(_opts.get_num_threads()));
         }
 
         ///

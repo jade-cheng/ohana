@@ -60,16 +60,15 @@ namespace jade
 
             a.validate_empty();
 
-            if (_opts.is_num_threads_specified())
-                openblas_set_num_threads(int(_opts.get_num_threads()));
+            openblas_set_num_threads(int(_opts.get_num_threads()));
 
             _rf = _create_rf(_f);
             _mu = g.create_mu();
 
             //
             // If the user specifies the C matrix, read it from the file; if the
-            // user specifies a tree, do not initialize the C matrix because it
-            // will be created (by the optimizer) based on the tree. If neither
+            // user specifies a tree, do not initialize its values because they
+            // will be initialized by the optimizer based on the tree. If neither
             // the C matrix nor the tree are specified, then create it based on
             // the rooted F matrix.
             //
@@ -79,7 +78,12 @@ namespace jade
                 verification_type::validate_c(_c);
                 verification_type::validate_fc_sizes(_f, _c);
             }
-            else if (!_opts.is_tin_specified())
+            else if (_opts.is_tin_specified())
+            {
+                const auto rk = _rf.get_height();
+                _c.resize(rk, rk);
+            }
+            else
             {
                 _c = _create_c(_rf);
             }

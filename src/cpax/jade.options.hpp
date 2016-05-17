@@ -40,10 +40,6 @@ namespace jade
         static constexpr auto no_max_time =
             std::numeric_limits<double>::quiet_NaN();
 
-        /// The value assigned for no --num-threads option.
-        static constexpr auto no_num_threads =
-            std::numeric_limits<size_t>::max();
-
         ///
         /// Initializes a new instance of the class.
         ///
@@ -56,7 +52,7 @@ namespace jade
             , _ksize          (a.read("--ksize", "-k", no_ksize))
             , _max_iterations (a.read("--max-iterations", "-mi", no_max_iterations))
             , _max_time       (a.read("--max-time", "-mt", no_max_time))
-            , _num_threads    (a.read("--num-threads", "-nt", no_num_threads))
+            , _num_threads    (a.read("--num-threads", "-nt", size_t(1)))
             , _qin            (a.read<std::string>("--qin", "-qi"))
             , _qout           (a.read<std::string>("--qout", "-qo"))
             , _seed           (a.read("--seed", "-s", std::random_device()()))
@@ -101,7 +97,7 @@ namespace jade
                 throw error() << "invalid specification of --fixed-q option "
                               << "and --force option";
 
-            if (is_num_threads_specified() && _num_threads == 0)
+            if (_num_threads == 0)
                 throw error() << "invalid number of threads specified for "
                               << "--num-threads option: " << _num_threads;
         }
@@ -174,7 +170,6 @@ namespace jade
         ///
         inline size_t get_num_threads() const
         {
-            assert(is_num_threads_specified());
             return _num_threads;
         }
 
@@ -274,14 +269,6 @@ namespace jade
         inline bool is_max_time_specified() const
         {
             return !std::isnan(_max_time);
-        }
-
-        ///
-        /// \return True if the number of threads option is specified.
-        ///
-        inline bool is_num_threads_specified() const
-        {
-            return _num_threads != no_num_threads;
         }
 
         ///

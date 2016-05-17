@@ -8,9 +8,9 @@ This project is directed by [Dr. Rasmus Nielsen](http://www.nielsenlab.org/) at 
 
 ## Installation
 
-The `Ohana` source code is available on [github](https://github.com/jade-cheng/Ohana):
+The `Ohana` source code is available on [github](https://github.com/jade-cheng/ohana):
 
-    $ git clone https://github.com/jade-cheng/Ohana
+    $ git clone https://github.com/jade-cheng/ohana
 
 Building `Ohana` from source requires a typical UNIX development environment, a C++11 compiler, and an installation of [OpenBLAS](http://www.openblas.net/).  Before running `make`, we specify the path to OpenBLAS in the file `configure.mk` located in the root of this source tree.  For example, Ubuntu typically installs OpenBLAS into the `/opt/OpenBLAS` directory, and the corresponding settings would be:
 
