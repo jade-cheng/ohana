@@ -67,7 +67,7 @@ We denote `C` as the covariance matrix to be inferred.  We denote the allele fre
 
 ### selscan
 
-We scan for covariance outliers by applying a likelihood model to each locus, similar to the one used genome-wide but with certain scalar factor variations. This creates a nested likelihood model.  Through a likelihood ratio test, it identifies loci in which the variance among populations is larger than expected from the genome-wide estimated covariance matrix.  In this version of `selscan` we multiply the varying scalar factor to the global covariance matrix.
+We scan for covariance outliers by applying a likelihood model to each locus, similar to the one used genome-wide but with certain scalar factor variations. This creates a nested likelihood model.  Through a likelihood ratio test, it identifies loci in which the variance among populations is larger than expected from the genome-wide estimated covariance matrix.
 
 
 ## Workflow
@@ -200,6 +200,8 @@ With the inferred population covariances and allele frequencies, we scan for cov
     +1.000000e+00   +1.213023e+00   +1.213023e+00   +0.000000e+00
 
 The workflow described above is for demonstration purposes only.  For real data analysis, the structure inference using `qpas` would include many fewer loci than a selection scan using `selscan`, which would require multiple millions of loci.  What's shown above, a scan of allele frequencies produced directly from the structure analysis, would be inadequate.
+
+## Selection study
 
 If selection study is the goal, the first step should be to obtain a full genome dataset of high quality.  Then a subset of this data, ~100 Kbp unlinked markers, should be used for the structure analysis with `qpas`.  After that, the `-fq` and `-qi` options should be used for `qpas` to produce admixture-corrected allele frequencies for the full genome dataset.  Finally, it should be possible to proceed to the selection study with full genome allele frequencies.
 
