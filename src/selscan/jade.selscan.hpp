@@ -86,7 +86,7 @@ namespace jade
                     r.update(si, _compute_score(si, r.get_j()));
 
             for (const auto & r : records)
-                std::cout << _format(r.get_step())       << '\t'
+                std::cout << r.get_step()                << '\t'
                           << _format(r.get_score())      << '\t'
                           << _format(r.get_best_score()) << '\t'
                           << _format(r.get_lle_ratio())  << '\n';

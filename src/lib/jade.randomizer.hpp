@@ -44,22 +44,27 @@ namespace jade
         /// \return A random F matrix.
         ///
         matrix_type randomize_f(
-                const size_t K, ///< The population size.
-                const size_t J) ///< The number of markers.
+                const size_t        K,  ///< The population size.
+                const matrix_type & mu) ///< The mu vector.
         {
-            static const auto K_0 = value_type(0);
-            static const auto K_1 = value_type(1);
-            static const auto K_MU = value_type(0.5);
-            static const auto K_SIGMA = value_type(0.01);
+            static const auto sigma = value_type(0.1);
 
-            static std::normal_distribution<value_type>
-                dist (K_MU, K_SIGMA);
+            assert(K > 0);
+            assert(mu.is_row_vector());
+
+            const auto J = mu.get_length();
 
             matrix_type f (K, J);
 
-            for (size_t k = 0; k < K; k++)
-                for (size_t j = 0; j < J; j++)
-                    f(k, j) = std::min(std::max(K_0, dist(_engine)), K_1);
+            for (size_t j = 0; j < J; j++)
+            {
+                static std::normal_distribution<value_type>
+                    dist (mu[j], sigma);
+
+                for (size_t k = 0; k < K; k++)
+                    f(k, j) = std::min(std::max(
+                        value_type(0), dist(_engine)), value_type(1));
+            }
 
             return f;
         }

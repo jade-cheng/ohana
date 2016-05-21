@@ -87,7 +87,6 @@ namespace jade
                 _fg.reset(new forced_grouping_type(_opts.get_force()));
 
             const auto n = _g->get_height();
-            const auto m = _g->get_width();
             const auto k = _opts.is_qin_specified() ? _q.get_width() :
                 _opts.is_fin_specified() ? _f.get_height() :
                 _opts.is_force_specified() ? _fg->get_k() :
@@ -101,7 +100,7 @@ namespace jade
                         : _rnd.randomize_q(n ,k);
 
             if (!_opts.is_fin_specified())
-                _f = _rnd.randomize_f(k, m);
+                _f = _rnd.randomize_f(k, _g->create_mu());
 
             verification_type::validate_gqf_sizes(*_g, _q, _f);
 
