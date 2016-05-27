@@ -47,7 +47,7 @@ namespace jade
                 const size_t        K,  ///< The population size.
                 const matrix_type & mu) ///< The mu vector.
         {
-            static const auto sigma = value_type(0.1);
+            static const auto sigma = value_type(0.01);
 
             assert(K > 0);
             assert(mu.is_row_vector());
