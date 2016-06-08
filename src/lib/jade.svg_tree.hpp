@@ -247,8 +247,13 @@ namespace jade
 
             metrics.scale = value_type(1);
 
+            const auto is_measured = [](const node_ex & n) -> bool
+            {
+                return n.node->has_length() && n.node->has_name();
+            };
+
             auto shortest_edge = numeric_limits_type::quiet_NaN();
-            if (iter->second.node->has_length())
+            if (is_measured(iter->second))
                 shortest_edge = iter->second.length;
 
             auto min = iter->second.position;
@@ -263,7 +268,7 @@ namespace jade
             {
                 while (iter != _table.end())
                 {
-                    if (iter->second.node->has_length())
+                    if (is_measured(iter->second))
                     {
                         const auto shortest_edge_i =
                             iter->second.length;
