@@ -50,7 +50,7 @@ namespace jade
             static const auto sigma = value_type(0.1);
 
             assert(K > 0);
-            assert(mu.is_row_vector());
+            assert(mu.is_column_vector());
 
             const auto J = mu.get_length();
 
