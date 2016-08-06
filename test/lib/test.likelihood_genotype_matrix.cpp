@@ -243,6 +243,52 @@ namespace
         std::istringstream in (bad_data);
         TEST_THROWS(lgm_type m (in));
     }
+
+    // ------------------------------------------------------------------------
+    void create_mu()
+    {
+        std::istringstream matrix_in (R"(
+            4 5
+            0.01 0.33 0.78 0.33 0.01
+            0.01 0.33 0.88 0.33 0.03
+            0.01 0.33 0.89 0.33 0.02
+            0.01 0.33 0.99 0.33 0.13
+
+            4 5
+            0.06 0.33 0.01 0.33 0.83
+            0.05 0.33 0.01 0.33 0.93
+            0.01 0.33 0.01 0.33 0.99
+            0.02 0.33 0.01 0.33 0.89
+
+            4 5
+            0.89 0.33 0.02 0.33 0.33
+            0.87 0.33 0.03 0.33 0.33
+            0.99 0.33 0.08 0.33 0.33
+            0.96 0.33 0.09 0.33 0.33
+        )");
+
+        std::istringstream mu_in (R"(
+            5 1
+            1.000000
+            0.500000
+            0.000000
+            0.500000
+            0.567544
+        )");
+
+        const auto expect = matrix_type(mu_in);
+        const auto actual = lgm_type(matrix_in).create_mu();
+
+        TEST_EQUAL(expect.get_width(),  actual.get_width());
+        TEST_EQUAL(expect.get_height(), actual.get_height());
+
+        static const auto epsilon = value_type(0.00001);
+        TEST_ALMOST(expect[0], actual[0], epsilon);
+        TEST_ALMOST(expect[1], actual[1], epsilon);
+        TEST_ALMOST(expect[2], actual[2], epsilon);
+        TEST_ALMOST(expect[3], actual[3], epsilon);
+        TEST_ALMOST(expect[4], actual[4], epsilon);
+    }
 }
 
 namespace test
@@ -252,6 +298,7 @@ namespace test
         TEST_CASE(compute_derivatives_q),
         TEST_CASE(constructor),
         TEST_CASE(constructor_invalid_data),
-        TEST_CASE(constructor_mismatched_sizes)
+        TEST_CASE(constructor_mismatched_sizes),
+        TEST_CASE(create_mu)
     };
 }

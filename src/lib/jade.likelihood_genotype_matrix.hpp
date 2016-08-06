@@ -407,6 +407,9 @@ namespace jade
         ///
         virtual matrix_type create_mu() const override
         {
+            static const auto em_iterations = size_t(100);
+            static const auto epsilon       = value_type(1.0e-6);
+
             const auto I = get_height();
             const auto J = get_width();
 
@@ -414,20 +417,30 @@ namespace jade
 
             for (size_t j = 0; j < J; j++)
             {
-                auto n = value_type(0);
-                auto d = value_type(0);
+                auto & mu_j = mu[j] = value_type(0.5);
 
-                for (size_t i = 0; i < I; i++)
+                for (auto iter = em_iterations; iter > 0; iter--)
                 {
-                    const auto aa = _g_aa(i, j);
-                    const auto Aa = _g_Aa(i, j);
-                    const auto AA = _g_AA(i, j);
+                    const auto wu_j = value_type(1.0) - mu_j;
+                    auto       sum  = value_type(0.0);
 
-                    n += Aa + (value_type(2) * AA);
-                    d += value_type(2) * (aa + Aa + AA);
+                    for (size_t i = 0; i < I; i++)
+                    {
+                        const auto AA = std::exp(_g_AA(i, j)) * mu_j * mu_j;
+                        const auto aa = std::exp(_g_aa(i, j)) * wu_j * wu_j;
+                        const auto Aa = std::exp(_g_Aa(i, j)) * mu_j * wu_j
+                                      * value_type(2.0);
+
+                        sum += (value_type(2.0) * AA + Aa)
+                             / (value_type(2.0) * (AA + Aa + aa));
+                    }
+
+                    const auto previous_mu_j = mu_j;
+                    mu_j = sum / value_type(I);
+
+                    if (std::fabs(previous_mu_j - mu_j) <= epsilon)
+                        break;
                 }
-
-                mu[j] = n / d;
             }
 
             return mu;
