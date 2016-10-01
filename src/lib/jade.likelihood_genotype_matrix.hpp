@@ -427,9 +427,9 @@ namespace jade
 
                     for (size_t i = 0; i < I; i++)
                     {
-                        const auto AA = std::exp(_g_AA(i, j)) * mu_j * mu_j;
-                        const auto aa = std::exp(_g_aa(i, j)) * wu_j * wu_j;
-                        const auto Aa = std::exp(_g_Aa(i, j)) * mu_j * wu_j
+                        const auto AA = _g_AA(i, j) * mu_j * mu_j;
+                        const auto aa = _g_aa(i, j) * wu_j * wu_j;
+                        const auto Aa = _g_Aa(i, j) * mu_j * wu_j
                                       * value_type(2.0);
 
                         sum += (value_type(2.0) * AA + Aa)
