@@ -87,35 +87,13 @@ namespace jade
             _decode_lower(_c, params);
 
             //
-            // Compute the Cholskey square root. If it fails, the matrix is
-            // not positive definite, so return infinity to indicate this is
-            // an unacceptable set of parameters.
+            // Compute the inverse and the log of the determinant. If this
+            // fails, the matrix is not positive semidefinite; return Infinity
+            // to indicate these are unacceptable parameters.
             //
-            if (!_c.potrf_lower())
+            value_type log_c_det;
+            if (!_c.invert(log_c_det))
                 return inf;
-
-            //
-            // Calculate the log of the determinant by summing twice the log of
-            // the diagonal entries.
-            //
-            auto log_c_det = value_type(0);
-            {
-                const auto end = _c.get_data() + _c.get_length() + _rk;
-                for (auto ptr = _c.get_data(); ptr != end; ptr += _rk + 1)
-                    log_c_det += value_type(2) * std::log(*ptr);
-            }
-
-            //
-            // Compute the inverse. If it fails, return infinity to indicate
-            // this is an unacceptable set of parameters.
-            //
-            if (!_c.potri_lower())
-                return inf;
-
-            //
-            // Mirror the values from the lower triangle to the upper triangle.
-            //
-            _c.copy_lower_to_upper();
 
             //
             // The Nelder-Mead algorithm minimizes the objective function, so

@@ -254,6 +254,60 @@ namespace
     }
 
     // ------------------------------------------------------------------------
+    void invert_2x2()
+    {
+        real_matrix actual {
+            { 2.0, 1.0 },
+            { 1.0, 2.0 }
+        };
+
+        const real_matrix expect {
+            { +2.0 / 3.0, -1.0 / 3.0 },
+            { -1.0 / 3.0, +2.0 / 3.0 }
+        };
+
+        real_type actual_log_det;
+        TEST_TRUE(actual.invert(actual_log_det));
+
+        TEST_ALMOST(real_type(std::log(3.0)), actual_log_det, epsilon);
+
+        TEST_ALMOST(expect(0, 0), actual(0, 0), epsilon);
+        TEST_ALMOST(expect(0, 1), actual(0, 1), epsilon);
+        TEST_ALMOST(expect(1, 0), actual(1, 0), epsilon);
+    }
+
+    // ------------------------------------------------------------------------
+    void invert_3x3()
+    {
+        real_matrix actual {
+            {  2.0, -1.0,  0.0 },
+            { -1.0,  2.0, -1.0 },
+            {  0.0, -1.0,  2.0 }
+        };
+
+        const real_matrix expect {
+            { 0.75, 0.50, 0.25 },
+            { 0.50, 1.00, 0.50 },
+            { 0.25, 0.50, 0.75 }
+        };
+
+        real_type actual_log_det;
+        TEST_TRUE(actual.invert(actual_log_det));
+
+        TEST_ALMOST(real_type(std::log(4.0)), actual_log_det, epsilon);
+
+        TEST_ALMOST(expect(0, 0), actual(0, 0), epsilon);
+        TEST_ALMOST(expect(0, 1), actual(0, 1), epsilon);
+        TEST_ALMOST(expect(0, 2), actual(0, 2), epsilon);
+        TEST_ALMOST(expect(1, 0), actual(1, 0), epsilon);
+        TEST_ALMOST(expect(1, 1), actual(1, 1), epsilon);
+        TEST_ALMOST(expect(1, 2), actual(1, 2), epsilon);
+        TEST_ALMOST(expect(2, 0), actual(2, 0), epsilon);
+        TEST_ALMOST(expect(2, 1), actual(2, 1), epsilon);
+        TEST_ALMOST(expect(2, 2), actual(2, 2), epsilon);
+    }
+
+    // ------------------------------------------------------------------------
     void negate()
     {
         const int_matrix m {
@@ -470,6 +524,8 @@ namespace test
         TEST_CASE(copy),
         TEST_CASE(gemm),
         TEST_CASE(gesv),
+        TEST_CASE(invert_2x2),
+        TEST_CASE(invert_3x3),
         TEST_CASE(negate),
         TEST_CASE(potrf),
         TEST_CASE(potri),

@@ -117,14 +117,23 @@ namespace jade
                 const size_t si,
                 const size_t j)
         {
+            typedef std::numeric_limits<value_type> limits_type;
+            static const auto lowest = limits_type::lowest();
+
             typedef typename matrix_type::openblas_type openblas_type;
 
             const auto percent = value_type(si) / value_type(steps - 1);
             for (size_t i = 0; i < RK * RK; i++)
                 c_inv[i] = c1[i] + percent * (c2[i] - c1[i]);
 
-            auto log_c_det = value_type(0);
-            _invert(c_inv, log_c_det);
+            //
+            // Compute the inverse and the log of the determinant. If this
+            // fails, the matrix is not positive semidefinite; return -Infinity
+            // to indicate these are unacceptable parameters.
+            //
+            value_type log_c_det;
+            if (!c_inv.invert(log_c_det))
+                return lowest;
 
             //
             // The ?gemv routines perform a matrix-vector operation defined as
@@ -189,45 +198,6 @@ namespace jade
         {
             const auto path = a.read<std::string>("--c-scale", "-cs");
             return path.empty() ? value_type(10) * c1 : matrix_type(path);
-        }
-
-        // --------------------------------------------------------------------
-        static bool _invert(matrix_type & c, value_type & log_c_det)
-        {
-            const auto rk = c.get_height();
-            assert(c.is_size(rk, rk));
-
-            //
-            // Compute the Cholskey square root. If it fails, the matrix is
-            // not positive definite, so return infinity to indicate this is
-            // an unacceptable set of parameters.
-            //
-            if (!c.potrf_lower())
-                return false;
-
-            //
-            // Calculate the log of the determinant by summing twice the log of
-            // the diagonal entries.
-            //
-            log_c_det = value_type(0);
-            {
-                const auto end = c.get_data() + c.get_length() + rk;
-                for (auto ptr = c.get_data(); ptr != end; ptr += rk + 1)
-                    log_c_det += value_type(2) * std::log(*ptr);
-            }
-
-            //
-            // Compute the inverse. If it fails, return infinity to indicate
-            // this is an unacceptable set of parameters.
-            //
-            if (!c.potri_lower())
-                return false;
-
-            //
-            // Mirror the values from the lower triangle to the upper triangle.
-            //
-            c.copy_lower_to_upper();
-            return true;
         }
 
         // --------------------------------------------------------------------

@@ -107,6 +107,28 @@ namespace jade
         }
 
         ///
+        /// \return True if the specified predicate is true for all values.
+        ///
+        template <typename TPredicate>
+        inline bool all_of(
+                const TPredicate predicate) ///< The predicate function.
+                const
+        {
+            return std::all_of(_m.begin(), _m.end(), predicate);
+        }
+
+        ///
+        /// \return True if the specified predicate is true for any value.
+        ///
+        template <typename TPredicate>
+        inline bool any_of(
+                const TPredicate predicate) ///< The predicate function.
+                const
+        {
+            return std::any_of(_m.begin(), _m.end(), predicate);
+        }
+
+        ///
         /// Clamps all values in the matrix to the specified range.
         ///
         void clamp(
@@ -670,6 +692,70 @@ namespace jade
         {
             const auto index = get_index(row, column);
             return _m[index];
+        }
+
+        ///
+        /// Computes and stores the inverse of this matrix using the Cholesky
+        /// square root method. Only the lower-left triangle is used to perform
+        /// the calculation. If this method fails, indicating this matrix is
+        /// not positive semidefinite, then the contents of this instance and
+        /// the parameter are left undefined, and the method returns false.
+        /// Otherwise, the lower triangle is copied to the upper triangle,
+        /// the parameter is assigned the log of the determinant of the
+        /// original matrix values, and the method returns true.
+        /// \return True if successful; otherwise, false.
+        ///
+        bool invert(
+                value_type & log_det) ///< The log of the determinant.
+        {
+            assert(is_square());
+
+            //
+            // Compute the Cholesky square root. If it fails, return false to
+            // indicate this is an unacceptable set of parameters.
+            //
+            if (!potrf_lower())
+                return false;
+
+            //
+            // Calculate the log of the determinant by summing twice the log of
+            // the diagonal entries.
+            //
+            log_det = value_type(0.0);
+            {
+                const auto end = get_data() + get_length() + _cx;
+                for (auto ptr = get_data(); ptr != end; ptr += _cx + 1)
+                    log_det += value_type(2.0) * std::log(*ptr);
+            }
+
+            //
+            // Compute the inverse. If it fails, return false to indicate
+            // this is an unacceptable set of parameters.
+            //
+            if (!potri_lower())
+                return false;
+
+            //
+            // Mirror the values from the lower triangle to the upper triangle.
+            //
+            copy_lower_to_upper();
+            return true;
+        }
+
+        ///
+        /// Computes and stores the inverse of this matrix using the Cholesky
+        /// square root method. Only the lower-left triangle is used to perform
+        /// the calculation. If this method fails, indicating this matrix is
+        /// not positive semidefinite, then the contents of this instance is
+        /// left undefined, and the method returns false. Otherwise, the lower
+        /// triangle is copied to the upper triangle, and the method returns
+        /// true.
+        /// \return True if successful; otherwise, false.
+        ///
+        inline bool invert()
+        {
+            value_type log_det;
+            return invert(log_det);
         }
 
         ///

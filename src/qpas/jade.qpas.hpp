@@ -316,10 +316,13 @@ namespace jade
                         active_set,
                         kkt_mat);
 
+            assert(kkt_mat.all_of([](const value_type v)
+                { return std::isfinite(v); }));
+
             kkt_mat.gesv();
 
-            assert(!kkt_mat.contains_inf());
-            assert(!kkt_mat.contains_nan());
+            assert(kkt_mat.all_of([](const value_type v)
+                { return std::isfinite(v); }));
 
             const auto last_column = kkt_mat.get_width() - 1;
 

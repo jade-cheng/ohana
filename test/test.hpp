@@ -261,7 +261,7 @@ namespace test
         bool is_thrown = false; \
         try { \
             STATEMENT; \
-        } catch (const std::exception & e) { \
+        } catch (const std::exception &) { \
             is_thrown = true; \
         } \
         if (!is_thrown) { \
