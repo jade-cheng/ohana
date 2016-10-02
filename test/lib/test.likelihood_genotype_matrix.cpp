@@ -273,7 +273,7 @@ namespace
             0.500000
             0.000000
             0.500000
-            0.567544
+            0.598450
         )");
 
         const auto expect = matrix_type(mu_in);
