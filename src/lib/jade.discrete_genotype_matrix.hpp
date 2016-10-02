@@ -164,7 +164,7 @@ namespace jade
                     auto       d_ptr     = d_vec.get_data();
                     auto       h_ptr     = h_mat.get_data();
                     auto       q_ik1_ptr = q_i0_ptr;
-                    const auto h_end      = h_ptr + h_mat.get_length();
+                    const auto h_end     = h_ptr + h_mat.get_length();
                     while (h_ptr != h_end)
                     {
                         const auto q_ik1 = *q_ik1_ptr;
@@ -442,25 +442,31 @@ namespace jade
         ///
         virtual matrix_type create_mu() const override
         {
+            static const auto epsilon = value_type(1.0e-6);
+            static const auto min     = value_type(0.0) + epsilon;
+            static const auto max     = value_type(1.0) - epsilon;
+
             const auto I = _g.get_height();
             const auto J = _g.get_width();
+
+            assert(I > 0);
 
             matrix_type mu (J, 1);
 
             for (size_t j = 0; j < J; j++)
             {
-                auto sum = value_type(0);
+                auto sum = value_type(0.0);
 
                 for (size_t i = 0; i < I; i++)
                 {
                     switch (_g(i, j))
                     {
                     case jade::genotype_major_major:
-                        sum += value_type(2);
+                        sum += value_type(2.0);
                         break;
 
                     case jade::genotype_major_minor:
-                        sum += value_type(1);
+                        sum += value_type(1.0);
                         break;
 
                     default:
@@ -468,7 +474,10 @@ namespace jade
                     }
                 }
 
-                mu[j] = sum / (value_type(2) * value_type(I));
+                mu[j] = std::min(std::max(
+                        min,
+                        sum / (value_type(2.0) * value_type(I))),
+                        max);
             }
 
             return mu;

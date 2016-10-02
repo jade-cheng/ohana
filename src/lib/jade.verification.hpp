@@ -73,6 +73,10 @@ namespace jade
         static bool validate_f(
                 const matrix_type & f) ///< The F matrix to validate.
         {
+            static const auto epsilon = value_type(1.0e-6);
+            static const auto min     = value_type(0.0) + epsilon;
+            static const auto max     = value_type(1.0) - epsilon;
+
             const auto K = f.get_height();
             const auto J = f.get_width();
 
@@ -90,7 +94,7 @@ namespace jade
                 {
                     const auto f_kj = f(k, j);
 
-                    if (f_kj >= value_type(0) && f_kj <= value_type(1))
+                    if (f_kj >= min && f_kj <= max)
                         continue;
 
                     throw error()

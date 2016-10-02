@@ -47,10 +47,15 @@ namespace jade
                 const size_t        K,  ///< The population size.
                 const matrix_type & mu) ///< The mu vector.
         {
-            static const auto sigma = value_type(0.1);
+            static const auto sigma   = value_type(0.1);
+            static const auto epsilon = value_type(1.0e-6);
+            static const auto min     = value_type(0.0) + epsilon;
+            static const auto max     = value_type(1.0) - epsilon;
 
             assert(K > 0);
             assert(mu.is_column_vector());
+            assert(mu.all_of([](const value_type n)
+                { return n >= min && n <= max; }));
 
             const auto J = mu.get_length();
 
@@ -63,7 +68,7 @@ namespace jade
 
                 for (size_t k = 0; k < K; k++)
                     f(k, j) = std::min(std::max(
-                        value_type(0), dist(_engine)), value_type(1));
+                        min, dist(_engine)), max);
             }
 
             return f;
