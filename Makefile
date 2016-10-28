@@ -23,7 +23,7 @@ clean:
 
 install: release
 	@ mkdir -p $(INSTALL_PREFIX)/bin
-	@ cp -v bin/release/* $(INSTALL_PREFIX)/bin/
+	@ cp -v bin/* $(INSTALL_PREFIX)/bin/
 
 #
 # USAGE: $(call .compile, <cpp-file>, <obj-file>, <options>)
