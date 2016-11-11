@@ -87,7 +87,9 @@ DESCRIPTION
   An Admixture Graph Input (AGI) file is an ASCII file that specifies parameter
   names for branch lengths, parameter names for admixture proportions, a number
   of populations, and expressions that are evaluated to compose the rooted
-  covariance matrix.  For example, the following represents an admixture graph
+  covariance matrix.  At least one branch length parameter and at least one
+  proportion parameter must be defined, but not all parameters must be used in
+  the expressions.  For example, the following represents an admixture graph
   with three populations, one admixture event, and rooted at population A:
 
     #         f/ \
