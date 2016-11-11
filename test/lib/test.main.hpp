@@ -11,6 +11,7 @@
 
 namespace test
 {
+    extern test_group agi_reader;
     extern test_group args;
     extern test_group discrete_genotype_matrix;
     extern test_group error;
@@ -20,6 +21,7 @@ namespace test
     extern test_group neighbor_joining;
     extern test_group newick;
     extern test_group scanner;
+    extern test_group shunting_yard;
     extern test_group simplex;
     extern test_group stopwatch;
     extern test_group svg_tree;

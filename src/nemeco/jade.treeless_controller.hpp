@@ -99,8 +99,9 @@ namespace jade
         /// Decodes the specified Nelder-Mead container and stores the result
         /// into the lower triangle, including the diagonal, of the covariance
         /// matrix.
+        /// \return True to indicate this method is successful.
         ///
-        virtual void _decode_lower(
+        virtual bool _decode_lower(
                 matrix_type &          dst, ///< The covariance matrix.
                 const container_type & src) ///< The Nelder-Mead container.
                 override
@@ -147,6 +148,11 @@ namespace jade
                 dst_ptr = anchor + rk + 1;
                 dst_end++;
             }
+
+            //
+            // This method is always successful.
+            //
+            return true;
         }
     };
 }

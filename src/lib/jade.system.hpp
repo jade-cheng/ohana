@@ -25,6 +25,7 @@
 #include <queue>
 #include <set>
 #include <sstream>
+#include <stack>
 #include <stdexcept>
 #include <string>
 

@@ -10,6 +10,7 @@
 int main(const int argc, const char * argv[])
 {
     return test::execute(argc, argv, {
+        test::agi_reader,
         test::args,
         test::discrete_genotype_matrix,
         test::error,
@@ -19,6 +20,7 @@ int main(const int argc, const char * argv[])
         test::neighbor_joining,
         test::newick,
         test::scanner,
+        test::shunting_yard,
         test::simplex,
         test::stopwatch,
         test::svg_tree,

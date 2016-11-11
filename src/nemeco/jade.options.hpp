@@ -38,7 +38,8 @@ namespace jade
         ///
         explicit basic_options(
                 args & a) ///< The command-line arguments.
-            : _cin            (a.read<std::string>("--cin", "-ci"))
+            : _ain            (a.read<std::string>("--ain", "-ai"))
+            , _cin            (a.read<std::string>("--cin", "-ci"))
             , _cout           (a.read<std::string>("--cout", "-co"))
             , _epsilon        (a.read("--epsilon", "-e", no_epsilon))
             , _max_iterations (a.read("--max-iterations", "-mi", no_iterations))
@@ -69,9 +70,20 @@ namespace jade
                 throw error("invalid specification of --tout option "
                             "without --tin option");
 
-            if (is_cin_specified() && is_tin_specified())
-                throw error("invalid specification of --cin option "
-                            "with --tin option");
+            if ((is_ain_specified() ? 1 : 0) +
+                (is_cin_specified() ? 1 : 0) +
+                (is_tin_specified() ? 1 : 0) > 1)
+                throw error("only one of --ain, --cin, and --tin options may "
+                            "be specified");
+        }
+
+        ///
+        /// \return The admixture graph input path, if specified.
+        ///
+        inline const std::string & get_ain() const
+        {
+            assert(is_ain_specified());
+            return _ain;
         }
 
         ///
@@ -146,6 +158,14 @@ namespace jade
         }
 
         ///
+        /// \return True if the admixture graph input file was specified.
+        ///
+        inline bool is_ain_specified() const
+        {
+            return !_ain.empty();
+        }
+
+        ///
         /// \return True if the C input matrix was specified.
         ///
         inline bool is_cin_specified() const
@@ -202,6 +222,7 @@ namespace jade
         }
 
     private:
+        std::string _ain;
         std::string _cin;
         std::string _cout;
         value_type  _epsilon;

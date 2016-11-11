@@ -60,6 +60,7 @@ namespace jade
             const algorithm_type algorithm (distances);
 
             algorithm.write(out);
+            out << std::endl;
         }
     };
 }

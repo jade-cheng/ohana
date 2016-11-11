@@ -17,9 +17,12 @@ ARGUMENTS
   f-matrix                      the path to the frequency matrix
 
 OPTIONS
+  --ain,-ai                     indicates the next argument is the path to the
+                                admixture graph input file; this option cannot
+                                be specified with the --cin or --tin options
   --cin,-ci                     indicates the next argument is the path to the
                                 initial covariance matrix; this option cannot
-                                be specified with the --tin option
+                                be specified with the --ain or --tin options
   --cout,-co                    indicates the next argument is the path to the
                                 [k-1 x k-1] output covariance matrix
   --epsilon,-e                  indicates the next argument is the epsilon
@@ -39,7 +42,7 @@ OPTIONS
   --tin, -ti                    indicates the next argument is the path to the
                                 file that defines the input tree structure; the
                                 file is in Newick format; this option cannot
-                                be specified with the --cin option
+                                be specified with the --ain or --cin options
   --tout, -to                   indicates the next argument is the path to the
                                 output file containing the tree structure; the
                                 file is in Newick format; this option cannot be
@@ -78,6 +81,39 @@ DESCRIPTION
   C := [K-1 x K-1] Rooted Covariance Matrix
      This matrix consists of floating-point values.  It is a symmetric and
      positive semidefinite matrix.
+
+  [Admixture Graph Input File Format]
+
+  An Admixture Graph Input (AGI) file is an ASCII file that specifies parameter
+  names for branch lengths, parameter names for admixture proportions, a number
+  of populations, and expressions that are evaluated to compose the rooted
+  covariance matrix.  For example, the following represents an admixture graph
+  with three populations, one admixture event, and rooted at population A:
+
+    #         f/ \
+    #         /   \g
+    #        /\    \
+    #       / d\   /\
+    #     a/    \ /e \
+    #     / <-p  |b   \c
+    #    A       B     C
+    #
+    # Branch length parameters, range: [0, inf)
+    a b c d e f g
+
+    # Admixture proportion parameters, range: [0, 1]
+    p
+
+    # K value
+    3
+
+    # Matrix entries, total number should be: K*(K-1)/2
+    # They map to a C matrix, e.g. K=3 it maps to:
+    #   0 1
+    #   1 2
+    (1 - p) * (b + e + g + f + a) + p * (b + d + a)
+    p * a + (1 - p) * (g + f + a)
+    c + g + f + a
 
 EXAMPLES
   $ nemeco -mi 3 -e 0 -co ./cout.matrix g.matrix f.matrix

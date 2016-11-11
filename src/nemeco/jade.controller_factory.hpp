@@ -7,6 +7,7 @@
 #ifndef JADE_CONTROLLER_FACTORY_HPP__
 #define JADE_CONTROLLER_FACTORY_HPP__
 
+#include "jade.agi_controller.hpp"
 #include "jade.tree_controller.hpp"
 #include "jade.treeless_controller.hpp"
 
@@ -32,6 +33,9 @@ namespace jade
         /// The options type.
         typedef basic_options<value_type> options_type;
 
+        /// The AGI controller type.
+        typedef basic_agi_controller<value_type> agi_controller_type;
+
         /// The tree controller type.
         typedef basic_tree_controller<value_type> tree_controller_type;
 
@@ -45,11 +49,12 @@ namespace jade
                 const settings_type & settings) ///< The program settings.
         {
             const auto & opts = settings.get_options();
-            return opts.is_tin_specified()
-                ? static_cast<controller_type *>(
-                    new tree_controller_type(settings))
-                : static_cast<controller_type *>(
-                    new treeless_controller_type(settings));
+            if (opts.is_tin_specified())
+                return new tree_controller_type(settings);
+            if (opts.is_ain_specified())
+                return new agi_controller_type(settings);
+            else
+                return new treeless_controller_type(settings);
         }
     };
 }

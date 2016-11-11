@@ -16,7 +16,7 @@ tmp/debug/src/filter/jade.main.o: src/filter/jade.main.cpp src/lib/jade.args.hpp
 
 DEBUG_NEMECO = tmp/debug/src/nemeco/jade.main.o
 
-tmp/debug/src/nemeco/jade.main.o: src/nemeco/jade.main.cpp src/nemeco/jade.optimizer.hpp src/nemeco/jade.controller_factory.hpp src/nemeco/jade.tree_controller.hpp src/nemeco/jade.controller.hpp src/lib/jade.likelihood.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/nemeco/jade.settings.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.simplex.hpp src/lib/jade.stopwatch.hpp src/lib/jade.rerooted_tree.hpp src/lib/jade.tree_path.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/nemeco/jade.treeless_controller.hpp src/lib/jade.version.hpp
+tmp/debug/src/nemeco/jade.main.o: src/nemeco/jade.main.cpp src/nemeco/jade.optimizer.hpp src/nemeco/jade.controller_factory.hpp src/nemeco/jade.agi_controller.hpp src/nemeco/jade.controller.hpp src/lib/jade.likelihood.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/nemeco/jade.settings.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.simplex.hpp src/lib/jade.stopwatch.hpp src/nemeco/jade.tree_controller.hpp src/lib/jade.rerooted_tree.hpp src/lib/jade.tree_path.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/nemeco/jade.treeless_controller.hpp src/lib/jade.version.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Isrc/nemeco)
 
 DEBUG_QPAS = tmp/debug/src/qpas/jade.main.o
@@ -67,8 +67,10 @@ tmp/debug/test/filter/test.main.o: test/filter/test.main.cpp test/filter/test.ma
 tmp/debug/test/filter/test.rema.o: test/filter/test.rema.cpp test/filter/test.main.hpp test/test.hpp src/filter/jade.rema.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/filter -Itest/filter)
 
-DEBUG_TEST_LIB = tmp/debug/test/lib/test.args.o tmp/debug/test/lib/test.discrete_genotype_matrix.o tmp/debug/test/lib/test.error.o tmp/debug/test/lib/test.lemke.o tmp/debug/test/lib/test.likelihood_genotype_matrix.o tmp/debug/test/lib/test.main.o tmp/debug/test/lib/test.matrix.o tmp/debug/test/lib/test.neighbor_joining.o tmp/debug/test/lib/test.newick.o tmp/debug/test/lib/test.scanner.o tmp/debug/test/lib/test.simplex.o tmp/debug/test/lib/test.stopwatch.o tmp/debug/test/lib/test.svg_tree.o tmp/debug/test/lib/test.vec2.o
+DEBUG_TEST_LIB = tmp/debug/test/lib/test.agi_reader.o tmp/debug/test/lib/test.args.o tmp/debug/test/lib/test.discrete_genotype_matrix.o tmp/debug/test/lib/test.error.o tmp/debug/test/lib/test.lemke.o tmp/debug/test/lib/test.likelihood_genotype_matrix.o tmp/debug/test/lib/test.main.o tmp/debug/test/lib/test.matrix.o tmp/debug/test/lib/test.neighbor_joining.o tmp/debug/test/lib/test.newick.o tmp/debug/test/lib/test.scanner.o tmp/debug/test/lib/test.shunting_yard.o tmp/debug/test/lib/test.simplex.o tmp/debug/test/lib/test.stopwatch.o tmp/debug/test/lib/test.svg_tree.o tmp/debug/test/lib/test.vec2.o
 
+tmp/debug/test/lib/test.agi_reader.o: test/lib/test.agi_reader.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
+	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/debug/test/lib/test.args.o: test/lib/test.args.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/debug/test/lib/test.discrete_genotype_matrix.o: test/lib/test.discrete_genotype_matrix.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.system.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.openblas.hpp
@@ -88,6 +90,8 @@ tmp/debug/test/lib/test.neighbor_joining.o: test/lib/test.neighbor_joining.cpp t
 tmp/debug/test/lib/test.newick.o: test/lib/test.newick.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/debug/test/lib/test.scanner.o: test/lib/test.scanner.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.scanner.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
+	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
+tmp/debug/test/lib/test.shunting_yard.o: test/lib/test.shunting_yard.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/debug/test/lib/test.simplex.o: test/lib/test.simplex.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.simplex.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
@@ -163,7 +167,7 @@ tmp/release/src/filter/jade.main.o: src/filter/jade.main.cpp src/lib/jade.args.h
 
 RELEASE_NEMECO = tmp/release/src/nemeco/jade.main.o
 
-tmp/release/src/nemeco/jade.main.o: src/nemeco/jade.main.cpp src/nemeco/jade.optimizer.hpp src/nemeco/jade.controller_factory.hpp src/nemeco/jade.tree_controller.hpp src/nemeco/jade.controller.hpp src/lib/jade.likelihood.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/nemeco/jade.settings.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.simplex.hpp src/lib/jade.stopwatch.hpp src/lib/jade.rerooted_tree.hpp src/lib/jade.tree_path.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/nemeco/jade.treeless_controller.hpp src/lib/jade.version.hpp
+tmp/release/src/nemeco/jade.main.o: src/nemeco/jade.main.cpp src/nemeco/jade.optimizer.hpp src/nemeco/jade.controller_factory.hpp src/nemeco/jade.agi_controller.hpp src/nemeco/jade.controller.hpp src/lib/jade.likelihood.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/nemeco/jade.settings.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.simplex.hpp src/lib/jade.stopwatch.hpp src/nemeco/jade.tree_controller.hpp src/lib/jade.rerooted_tree.hpp src/lib/jade.tree_path.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/nemeco/jade.treeless_controller.hpp src/lib/jade.version.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Isrc/nemeco)
 
 RELEASE_QPAS = tmp/release/src/qpas/jade.main.o
@@ -214,8 +218,10 @@ tmp/release/test/filter/test.main.o: test/filter/test.main.cpp test/filter/test.
 tmp/release/test/filter/test.rema.o: test/filter/test.rema.cpp test/filter/test.main.hpp test/test.hpp src/filter/jade.rema.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/filter -Itest/filter)
 
-RELEASE_TEST_LIB = tmp/release/test/lib/test.args.o tmp/release/test/lib/test.discrete_genotype_matrix.o tmp/release/test/lib/test.error.o tmp/release/test/lib/test.lemke.o tmp/release/test/lib/test.likelihood_genotype_matrix.o tmp/release/test/lib/test.main.o tmp/release/test/lib/test.matrix.o tmp/release/test/lib/test.neighbor_joining.o tmp/release/test/lib/test.newick.o tmp/release/test/lib/test.scanner.o tmp/release/test/lib/test.simplex.o tmp/release/test/lib/test.stopwatch.o tmp/release/test/lib/test.svg_tree.o tmp/release/test/lib/test.vec2.o
+RELEASE_TEST_LIB = tmp/release/test/lib/test.agi_reader.o tmp/release/test/lib/test.args.o tmp/release/test/lib/test.discrete_genotype_matrix.o tmp/release/test/lib/test.error.o tmp/release/test/lib/test.lemke.o tmp/release/test/lib/test.likelihood_genotype_matrix.o tmp/release/test/lib/test.main.o tmp/release/test/lib/test.matrix.o tmp/release/test/lib/test.neighbor_joining.o tmp/release/test/lib/test.newick.o tmp/release/test/lib/test.scanner.o tmp/release/test/lib/test.shunting_yard.o tmp/release/test/lib/test.simplex.o tmp/release/test/lib/test.stopwatch.o tmp/release/test/lib/test.svg_tree.o tmp/release/test/lib/test.vec2.o
 
+tmp/release/test/lib/test.agi_reader.o: test/lib/test.agi_reader.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
+	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/release/test/lib/test.args.o: test/lib/test.args.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/release/test/lib/test.discrete_genotype_matrix.o: test/lib/test.discrete_genotype_matrix.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.system.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.openblas.hpp
@@ -235,6 +241,8 @@ tmp/release/test/lib/test.neighbor_joining.o: test/lib/test.neighbor_joining.cpp
 tmp/release/test/lib/test.newick.o: test/lib/test.newick.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/release/test/lib/test.scanner.o: test/lib/test.scanner.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.scanner.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
+	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
+tmp/release/test/lib/test.shunting_yard.o: test/lib/test.shunting_yard.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 tmp/release/test/lib/test.simplex.o: test/lib/test.simplex.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.simplex.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)

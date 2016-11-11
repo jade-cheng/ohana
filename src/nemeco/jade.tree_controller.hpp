@@ -131,7 +131,7 @@ namespace jade
             }
             else
             {
-                std::cout << "[Tree]\n" << *_unrooted_tree_ptr << std::endl;
+                std::cout << "\n[Tree]\n" << *_unrooted_tree_ptr << std::endl;
             }
         }
 
@@ -148,8 +148,9 @@ namespace jade
         /// Decodes the specified Nelder-Mead container and stores the result
         /// into the lower triangle, including the diagonal, of the covariance
         /// matrix.
+        /// \return True to indicate this method is successful.
         ///
-        virtual void _decode_lower(
+        virtual bool _decode_lower(
                 matrix_type &          dst, ///< The covariance matrix.
                 const container_type & src) ///< The Nelder-Mead container.
                 override
@@ -168,6 +169,11 @@ namespace jade
             //
             for (const auto & entry : _table)
                 dst[entry.i] = entry.p.get_length();
+
+            //
+            // This method is always successful.
+            //
+            return true;
         }
 
     private:

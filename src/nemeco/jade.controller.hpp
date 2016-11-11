@@ -71,20 +71,22 @@ namespace jade
             static const auto inf = std::numeric_limits<value_type>::max();
 
             //
-            // No branch length may be negative; if one is, return infinity
-            // to reject these parameters.
-            //
-            for (const auto n : params)
-                if (n <= value_type(0))
-                    return inf;
-
-            //
             // The LAPACK routines need only the lower triangle stored in
             // the matrix. If these routines are successful, the lower
             // triangle is copied to the upper triangle before calculating
             // the likelihood.
             //
-            _decode_lower(_c, params);
+            if (!_decode_lower(_c, params))
+                return inf;
+
+            //
+            // Variance and covariance values must be positive; if one is not,
+            // return infinity to reject these parameters.
+            //
+            for (size_t row = 0; row < _rk; row++)
+                for (size_t col = 0; col <= row; col++)
+                    if (_c(row, col) <= value_type(0))
+                        return inf;
 
             //
             // Compute the inverse and the log of the determinant. If this
@@ -218,8 +220,9 @@ namespace jade
         /// Decodes the specified Nelder-Mead container and stores the result
         /// into the lower triangle, including the diagonal, of the covariance
         /// matrix.
+        /// \return True if successful; otherwise, false.
         ///
-        virtual void _decode_lower(
+        virtual bool _decode_lower(
                 matrix_type &          dst, ///< The covariance matrix.
                 const container_type & src) ///< The Nelder-Mead container.
                 = 0;

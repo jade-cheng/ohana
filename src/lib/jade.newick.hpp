@@ -507,6 +507,7 @@ namespace jade
         {
             std::ofstream out (path);
             write(out);
+            out << std::endl;
         }
 
         ///
