@@ -141,6 +141,11 @@ namespace jade
         /// \param path The path to the file to read and parse.
         ///
         explicit basic_agi_reader(const std::string & path)
+            : _args             ()
+            , _branch_names     ()
+            , _proportion_names ()
+            , _k                (0)
+            , _entries          ()
         {
             try
             {

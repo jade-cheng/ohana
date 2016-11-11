@@ -38,6 +38,8 @@ namespace jade
         /// \param in The input stream providing tokens.
         ///
         explicit basic_shunting_yard(std::istream & in)
+            : _args  ()
+            , _queue ()
         {
             std::vector<_token> tokens;
             _scan(in, tokens);
@@ -56,6 +58,8 @@ namespace jade
         /// \param expression The string providing tokens.
         ///
         explicit basic_shunting_yard(const std::string & expression)
+            : _args  ()
+            , _queue ()
         {
             std::istringstream in (expression);
             *this = basic_shunting_yard(in);
