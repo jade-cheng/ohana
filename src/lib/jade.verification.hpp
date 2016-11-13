@@ -231,9 +231,9 @@ namespace jade
                         << "] (" << q_ik << ") is not between 0 and 1";
                 }
 
-                if (std::fabs(sum - value_type(1)) < epsilon)
+                if (std::fabs(sum - value_type(1)) <= epsilon)
                 {
-                    if (std::fabs(max - min) > epsilon)
+                    if (std::fabs(max - min) >= epsilon)
                         continue;
 
                     throw error() << "invalid Q matrix row " << i+1

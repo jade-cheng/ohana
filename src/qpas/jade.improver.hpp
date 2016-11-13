@@ -174,17 +174,15 @@ namespace jade
                 q_dst.clamp_row(i, min, max);
 
                 const auto sum = q_dst.get_row_sum(i);
-                if (fabs(sum - value_type(1)) > epsilon)
-                    q_dst.multiply_row(i, value_type(1) / sum);
+                q_dst.multiply_row(i, value_type(1) / sum);
             }
 
             return q_dst;
         }
 
     private:
-        static constexpr auto epsilon = value_type(0.000001);
-        static constexpr auto min     = value_type(0.000001);
-        static constexpr auto max     = value_type(0.999999);
+        static constexpr auto min = value_type(0.000001);
+        static constexpr auto max = value_type(0.999999);
 
         // --------------------------------------------------------------------
         static matrix_type _create_b_vec(
