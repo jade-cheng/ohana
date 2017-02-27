@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -13,8 +13,8 @@ namespace
   selscan [options] <g-matrix> <f-matrix> <c-matrix>
 
 ARGUMENTS
-  g-matrix     path to the [N x M] G matrix
-  f-matrix     path to the [K x M] F matrix
+  g-matrix     path to the [I x J] G matrix
+  f-matrix     path to the [K x J] F matrix
   c-matrix     path to the [K-1 x K-1] global C matrix
 
 OPTIONS
@@ -33,14 +33,14 @@ DESCRIPTION
   values, but it is possible to specify a scaling matrix using the --c-scale
   option.
 
-  There are 'n' individuals, 'k' populations, and 'm' markers. The sizes of
+  There are 'I' individuals, 'K' populations, and 'J' markers. The sizes of
   the matrices evaluated by this program are:
 
-  G matrix    [N x M]     the path to a genotype matrix; the format of the file
+  G matrix    [I x J]     the path to a genotype matrix; the format of the file
                           is determined based on the extension,
                             .dgm (discrete genotype matrix) or
                             .lgm (likelihood genotype matrix)
-  F matrix    [K x M]     floating-point values ranging from 0.0 to 1.0
+  F matrix    [K x J]     floating-point values ranging from 0.0 to 1.0
   C matrix    [K-1 x K-1] floating-point values; the matrix is symmetric and
                           positive semidefinite
 
@@ -83,7 +83,7 @@ EXAMPLE
 BUGS
   Report any bugs to Jade Cheng <info@jade-cheng.com>.
 
-Copyright (c) 2015-2016 Jade Cheng
+Copyright (c) 2015-2017 Jade Cheng
 )";
 }
 

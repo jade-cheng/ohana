@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -620,6 +620,51 @@ namespace jade
         size_t get_length() const
         {
             return _m.size();
+        }
+
+        ///
+        /// Returns the maximum element value. This method should not be called
+        /// if the matrix is empty.
+        ///
+        /// \return The maximum element value.
+        ///
+        value_type get_max_value() const
+        {
+            assert(!is_empty());
+            return *std::max_element(_m.begin(), _m.end());
+        }
+
+        ///
+        /// Returns the minimum element value. This method should not be called
+        /// if the matrix is empty.
+        ///
+        /// \return The minimum element value.
+        ///
+        value_type get_min_value() const
+        {
+            assert(!is_empty());
+            return *std::min_element(_m.begin(), _m.end());
+        }
+
+        ///
+        /// Returns the minimum and maximum elements in the matrix. If the
+        /// matrix is empty, this method returns false. Otherwise, this method
+        /// stores the results in the specified arguments and returns true.
+        ///
+        /// \param min The minimum value (output).
+        /// \param max The maximum value (output).
+        ///
+        /// \return True if successful; otherwise, false.
+        ///
+        bool get_min_max(value_type & min, value_type & max) const
+        {
+            if (_m.empty())
+                return false;
+
+            const auto p = *std::minmax_element(_m.begin(), _m.end());
+            min = p.first;
+            max = p.second;
+            return true;
         }
 
         ///

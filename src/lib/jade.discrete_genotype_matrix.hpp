@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -86,6 +86,22 @@ namespace jade
                 const initializer_list_type & values)
             : _g (values)
         {
+        }
+
+        ///
+        /// \return This instance.
+        ///
+        inline const basic_discrete_genotype_matrix * as_dgm() const override
+        {
+            return this;
+        }
+
+        ///
+        /// \return This instance.
+        ///
+        inline basic_discrete_genotype_matrix * as_dgm() override
+        {
+            return this;
         }
 
         ///
@@ -481,6 +497,14 @@ namespace jade
             }
 
             return mu;
+        }
+
+        ///
+        /// \return The base matrix.
+        ///
+        inline const genotype_matrix_type & get_matrix() const
+        {
+            return _g;
         }
 
         ///

@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -30,7 +30,7 @@ namespace jade
                 char_type const * const title, ///< The program name.
                 ostream_type &          out)   ///< The output stream.
         {
-            static const values current { 0, 0, 6161, 27828, 2015, 2016 };
+            static const values current { 0, 0, 6265, 35487, 2015, 2017 };
 
             out << "ohana/" << title << ' '
                 << current.major << '.'

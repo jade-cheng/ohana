@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -11,6 +11,12 @@
 
 namespace jade
 {
+    template <typename TValue>
+    class basic_discrete_genotype_matrix;
+
+    template <typename TValue>
+    class basic_likelihood_genotype_matrix;
+
     ///
     /// A template for an abstract class implementing operations for a genotype
     /// matrix.
@@ -25,12 +31,44 @@ namespace jade
         /// The matrix type.
         typedef basic_matrix<TValue> matrix_type;
 
+        /// The discrete genotype matrix type.
+        typedef basic_discrete_genotype_matrix<value_type> dgm_type;
+
+        /// The likelihood genotype matrix type.
+        typedef basic_likelihood_genotype_matrix<value_type> lgm_type;
+
         ///
         /// Reclaims resources used by the class and derived classes.
         ///
         inline virtual ~basic_genotype_matrix()
         {
         }
+
+        #define JADE_CREATE_CASTS_TO_TYPE(TYPE, AS_TYPE, IS_TYPE, TO_TYPE) \
+            inline virtual const TYPE * AS_TYPE() const { \
+                return nullptr; \
+            } \
+            inline virtual TYPE * AS_TYPE() { \
+                return nullptr; \
+            } \
+            inline bool IS_TYPE() const { \
+                return nullptr != AS_TYPE(); \
+            } \
+            inline const TYPE & TO_TYPE() const { \
+                const auto out = AS_TYPE(); \
+                assert(nullptr != out); \
+                return *out; \
+            } \
+            inline TYPE & TO_TYPE() { \
+                const auto out = AS_TYPE(); \
+                assert(nullptr != out); \
+                return *out; \
+            }
+
+        JADE_CREATE_CASTS_TO_TYPE(dgm_type, as_dgm, is_dgm, to_dgm)
+        JADE_CREATE_CASTS_TO_TYPE(lgm_type, as_lgm, is_lgm, to_lgm)
+
+        #undef JADE_CREATE_CASTS_TO_TYPE
 
         ///
         /// Computes the derivative vector and hessian matrix for a specified

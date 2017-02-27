@@ -19,6 +19,11 @@ DEBUG_NEMECO = tmp/debug/src/nemeco/jade.main.o
 tmp/debug/src/nemeco/jade.main.o: src/nemeco/jade.main.cpp src/nemeco/jade.optimizer.hpp src/nemeco/jade.controller_factory.hpp src/nemeco/jade.agi_controller.hpp src/nemeco/jade.controller.hpp src/lib/jade.likelihood.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/nemeco/jade.settings.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.simplex.hpp src/lib/jade.stopwatch.hpp src/nemeco/jade.tree_controller.hpp src/lib/jade.rerooted_tree.hpp src/lib/jade.tree_path.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/nemeco/jade.treeless_controller.hpp src/lib/jade.version.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Isrc/nemeco)
 
+DEBUG_NEOSCAN = tmp/debug/src/neoscan/jade.main.o
+
+tmp/debug/src/neoscan/jade.main.o: src/neoscan/jade.main.cpp src/neoscan/jade.neoscan.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/lib/jade.version.hpp
+	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Isrc/neoscan)
+
 DEBUG_QPAS = tmp/debug/src/qpas/jade.main.o
 
 tmp/debug/src/qpas/jade.main.o: src/qpas/jade.main.cpp src/qpas/jade.optimizer.hpp src/qpas/jade.improver.hpp src/qpas/jade.forced_grouping.hpp src/lib/jade.randomizer.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/qpas/jade.qpas.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/qpas/jade.settings.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/qpas/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.stopwatch.hpp src/lib/jade.version.hpp
@@ -37,6 +42,8 @@ tmp/debug/src/selscan/jade.main.o: src/selscan/jade.main.cpp src/selscan/jade.se
 	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
 ./bin/debug/nemeco: $(DEBUG_NEMECO)
 	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
+./bin/debug/neoscan: $(DEBUG_NEOSCAN)
+	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
 ./bin/debug/qpas: $(DEBUG_QPAS)
 	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
 ./bin/debug/selscan: $(DEBUG_SELSCAN)
@@ -47,6 +54,7 @@ tmp/debug/src/selscan/jade.main.o: src/selscan/jade.main.cpp src/selscan/jade.se
 	./bin/debug/cpax \
 	./bin/debug/filter \
 	./bin/debug/nemeco \
+	./bin/debug/neoscan \
 	./bin/debug/qpas \
 	./bin/debug/selscan
 
@@ -107,6 +115,13 @@ DEBUG_TEST_NEMECO = tmp/debug/test/nemeco/test.main.o
 tmp/debug/test/nemeco/test.main.o: test/nemeco/test.main.cpp test/nemeco/test.main.hpp test/test.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/nemeco -Itest/nemeco)
 
+DEBUG_TEST_NEOSCAN = tmp/debug/test/neoscan/test.main.o tmp/debug/test/neoscan/test.neoscan.o
+
+tmp/debug/test/neoscan/test.main.o: test/neoscan/test.main.cpp test/neoscan/test.main.hpp test/test.hpp
+	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/neoscan -Itest/neoscan)
+tmp/debug/test/neoscan/test.neoscan.o: test/neoscan/test.neoscan.cpp test/neoscan/test.main.hpp test/test.hpp src/neoscan/jade.neoscan.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp src/lib/jade.likelihood_genotype_matrix.hpp
+	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/neoscan -Itest/neoscan)
+
 DEBUG_TEST_QPAS = tmp/debug/test/qpas/test.main.o
 
 tmp/debug/test/qpas/test.main.o: test/qpas/test.main.cpp test/qpas/test.main.hpp test/test.hpp
@@ -127,6 +142,8 @@ tmp/debug/test/selscan/test.main.o: test/selscan/test.main.cpp test/selscan/test
 	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
 ./bin/debug/test-nemeco: $(DEBUG_TEST_NEMECO)
 	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
+./bin/debug/test-neoscan: $(DEBUG_TEST_NEOSCAN)
+	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
 ./bin/debug/test-qpas: $(DEBUG_TEST_QPAS)
 	@ $(call .link,$@,$^,$(DEBUG_LDFLAGS))
 ./bin/debug/test-selscan: $(DEBUG_TEST_SELSCAN)
@@ -138,6 +155,7 @@ tmp/debug/test/selscan/test.main.o: test/selscan/test.main.cpp test/selscan/test
 	./bin/debug/test-filter \
 	./bin/debug/test-lib \
 	./bin/debug/test-nemeco \
+	./bin/debug/test-neoscan \
 	./bin/debug/test-qpas \
 	./bin/debug/test-selscan
 
@@ -146,6 +164,7 @@ tmp/debug/test/selscan/test.main.o: test/selscan/test.main.cpp test/selscan/test
 	@ ./bin/debug/test-filter
 	@ ./bin/debug/test-lib
 	@ ./bin/debug/test-nemeco
+	@ ./bin/debug/test-neoscan
 	@ ./bin/debug/test-qpas
 	@ ./bin/debug/test-selscan
 
@@ -170,6 +189,11 @@ RELEASE_NEMECO = tmp/release/src/nemeco/jade.main.o
 tmp/release/src/nemeco/jade.main.o: src/nemeco/jade.main.cpp src/nemeco/jade.optimizer.hpp src/nemeco/jade.controller_factory.hpp src/nemeco/jade.agi_controller.hpp src/nemeco/jade.controller.hpp src/lib/jade.likelihood.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/nemeco/jade.settings.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.simplex.hpp src/lib/jade.stopwatch.hpp src/nemeco/jade.tree_controller.hpp src/lib/jade.rerooted_tree.hpp src/lib/jade.tree_path.hpp src/lib/jade.newick.hpp src/lib/jade.scanner.hpp src/nemeco/jade.treeless_controller.hpp src/lib/jade.version.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Isrc/nemeco)
 
+RELEASE_NEOSCAN = tmp/release/src/neoscan/jade.main.o
+
+tmp/release/src/neoscan/jade.main.o: src/neoscan/jade.main.cpp src/neoscan/jade.neoscan.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/lib/jade.version.hpp
+	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Isrc/neoscan)
+
 RELEASE_QPAS = tmp/release/src/qpas/jade.main.o
 
 tmp/release/src/qpas/jade.main.o: src/qpas/jade.main.cpp src/qpas/jade.optimizer.hpp src/qpas/jade.improver.hpp src/qpas/jade.forced_grouping.hpp src/lib/jade.randomizer.hpp src/lib/jade.matrix.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.openblas.hpp src/qpas/jade.qpas.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/qpas/jade.settings.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/qpas/jade.options.hpp src/lib/jade.args.hpp src/lib/jade.stopwatch.hpp src/lib/jade.version.hpp
@@ -188,6 +212,8 @@ tmp/release/src/selscan/jade.main.o: src/selscan/jade.main.cpp src/selscan/jade.
 	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
 ./bin/nemeco: $(RELEASE_NEMECO)
 	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
+./bin/neoscan: $(RELEASE_NEOSCAN)
+	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
 ./bin/qpas: $(RELEASE_QPAS)
 	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
 ./bin/selscan: $(RELEASE_SELSCAN)
@@ -198,6 +224,7 @@ tmp/release/src/selscan/jade.main.o: src/selscan/jade.main.cpp src/selscan/jade.
 	./bin/cpax \
 	./bin/filter \
 	./bin/nemeco \
+	./bin/neoscan \
 	./bin/qpas \
 	./bin/selscan
 
@@ -258,6 +285,13 @@ RELEASE_TEST_NEMECO = tmp/release/test/nemeco/test.main.o
 tmp/release/test/nemeco/test.main.o: test/nemeco/test.main.cpp test/nemeco/test.main.hpp test/test.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/nemeco -Itest/nemeco)
 
+RELEASE_TEST_NEOSCAN = tmp/release/test/neoscan/test.main.o tmp/release/test/neoscan/test.neoscan.o
+
+tmp/release/test/neoscan/test.main.o: test/neoscan/test.main.cpp test/neoscan/test.main.hpp test/test.hpp
+	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/neoscan -Itest/neoscan)
+tmp/release/test/neoscan/test.neoscan.o: test/neoscan/test.neoscan.cpp test/neoscan/test.main.hpp test/test.hpp src/neoscan/jade.neoscan.hpp src/lib/jade.args.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp src/lib/jade.likelihood_genotype_matrix.hpp
+	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/neoscan -Itest/neoscan)
+
 RELEASE_TEST_QPAS = tmp/release/test/qpas/test.main.o
 
 tmp/release/test/qpas/test.main.o: test/qpas/test.main.cpp test/qpas/test.main.hpp test/test.hpp
@@ -278,6 +312,8 @@ tmp/release/test/selscan/test.main.o: test/selscan/test.main.cpp test/selscan/te
 	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
 ./bin/release/test-nemeco: $(RELEASE_TEST_NEMECO)
 	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
+./bin/release/test-neoscan: $(RELEASE_TEST_NEOSCAN)
+	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
 ./bin/release/test-qpas: $(RELEASE_TEST_QPAS)
 	@ $(call .link,$@,$^,$(RELEASE_LDFLAGS))
 ./bin/release/test-selscan: $(RELEASE_TEST_SELSCAN)
@@ -289,6 +325,7 @@ tmp/release/test/selscan/test.main.o: test/selscan/test.main.cpp test/selscan/te
 	./bin/release/test-filter \
 	./bin/release/test-lib \
 	./bin/release/test-nemeco \
+	./bin/release/test-neoscan \
 	./bin/release/test-qpas \
 	./bin/release/test-selscan
 
@@ -297,6 +334,7 @@ tmp/release/test/selscan/test.main.o: test/selscan/test.main.cpp test/selscan/te
 	@ ./bin/release/test-filter
 	@ ./bin/release/test-lib
 	@ ./bin/release/test-nemeco
+	@ ./bin/release/test-neoscan
 	@ ./bin/release/test-qpas
 	@ ./bin/release/test-selscan
 
