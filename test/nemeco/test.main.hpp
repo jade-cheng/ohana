@@ -11,6 +11,7 @@
 
 namespace test
 {
+    extern test_group nemeco;
 }
 
 #endif // TEST_MAIN_HPP__

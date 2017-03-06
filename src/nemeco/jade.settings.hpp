@@ -73,7 +73,7 @@ namespace jade
 
             openblas_set_num_threads(int(_opts.get_num_threads()));
 
-            _rf = _create_rf(_f);
+            _rf = create_rf(_f);
             _mu = g.create_mu();
 
             //
@@ -110,7 +110,7 @@ namespace jade
             }
             else
             {
-                _c = _create_c(_rf);
+                _c = create_c(_rf, _mu);
             }
 
             verification_type::validate_gf_sizes(g, _f);
@@ -157,12 +157,27 @@ namespace jade
             return _rf;
         }
 
-    private:
         // --------------------------------------------------------------------
-        static matrix_type _create_c(const matrix_type & rf)
+        static matrix_type create_c(
+                const matrix_type & rf, ///< The [RK x 1] rooted F matrix.
+                const matrix_type & mu) ///< The [J x 1] sample allele freq.
         {
             const auto RK = rf.get_height();
             const auto J  = rf.get_width();
+
+            assert(J > 1);
+            assert(mu.is_size(J, 1));
+
+            static const auto n1  = value_type(1.0);
+            const auto        nj  = static_cast<value_type>(J);
+            const auto        nj1 = static_cast<value_type>(J - 1);
+
+            //
+            // Create a vector of average row values for the RF matrix.
+            //
+            matrix_type rf_avg (RK, 1);
+            for (size_t rk = 0; rk < RK; rk++)
+                rf_avg[rk] = rf.get_row_sum(rk) / nj;
 
             //
             // The covariance matrix is [K-1 x K-1].
@@ -170,38 +185,32 @@ namespace jade
             matrix_type c (RK, RK);
 
             //
-            // Loop over the J columns of RF; multiply each row by its
-            // transpose, scale it by 1/J, and add it to the working C matrix.
+            // Calculate the lower triangle of sample covariance of the RF
+            // matrix and divide it by the mux.
             //
-            typedef typename matrix_type::openblas_type openblas_type;
-            const auto alpha = value_type(1) / value_type(J);
-            const auto beta  = value_type(1);
-            const auto rf_beg = rf.get_data();
-            const auto rf_end = rf_beg + J;
-            for (auto rf_ptr = rf_beg; rf_ptr != rf_end; rf_ptr++)
+            for (size_t j = 0; j < J; j++)
             {
-                openblas_type::gemm(
-                    CblasRowMajor, // layout
-                    CblasNoTrans,  // transa
-                    CblasTrans,    // transb
-                    blasint(RK),   // m
-                    blasint(RK),   // n
-                    blasint(1),    // k
-                    alpha,         // alpha
-                    rf_ptr,        // a
-                    blasint(J),    // lda
-                    rf_ptr,        // b
-                    blasint(J),    // ldb
-                    beta,          // beta,
-                    c.get_data(),  // c
-                    blasint(RK));  // ldc
+                const auto mu_j = mu[j];
+                const auto s_j  = n1 / (mu_j * (n1 - mu_j)) / nj1;
+
+                for (size_t row = 0; row < RK; row++)
+                {
+                    const auto s_row = s_j * (rf(row, j) - rf_avg[row]);
+                    for (size_t col = 0; col <= row; col++)
+                        c(row, col) += s_row * (rf(col, j) - rf_avg[col]);
+                }
             }
 
+            //
+            // Copy the lower triangle to the upper triangle and return the
+            // covariance matrix.
+            //
+            c.copy_lower_to_upper();
             return c;
         }
 
         // --------------------------------------------------------------------
-        static matrix_type _create_rf(const matrix_type & f)
+        static matrix_type create_rf(const matrix_type & f)
         {
             const auto K = f.get_height();
             const auto J = f.get_width();
@@ -220,7 +229,6 @@ namespace jade
         }
 
         options_type _opts;
-
         agi_ptr_type _agi;
         matrix_type  _f;
         matrix_type  _rf;

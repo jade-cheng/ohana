@@ -7,7 +7,9 @@
 #include "test.main.hpp"
 
 // ----------------------------------------------------------------------------
-int main()
+int main(const int argc, const char * argv[])
 {
-    return EXIT_SUCCESS;
+    return test::execute(argc, argv, {
+        test::nemeco
+    });
 }

@@ -110,9 +110,11 @@ tmp/debug/test/lib/test.svg_tree.o: test/lib/test.svg_tree.cpp test/lib/test.mai
 tmp/debug/test/lib/test.vec2.o: test/lib/test.vec2.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.vec2.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 
-DEBUG_TEST_NEMECO = tmp/debug/test/nemeco/test.main.o
+DEBUG_TEST_NEMECO = tmp/debug/test/nemeco/test.main.o tmp/debug/test/nemeco/test.settings.o
 
 tmp/debug/test/nemeco/test.main.o: test/nemeco/test.main.cpp test/nemeco/test.main.hpp test/test.hpp
+	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/nemeco -Itest/nemeco)
+tmp/debug/test/nemeco/test.settings.o: test/nemeco/test.settings.cpp test/nemeco/test.main.hpp test/test.hpp src/nemeco/jade.settings.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp
 	@ $(call .compile,$<,$@,$(DEBUG_CXXFLAGS) -Isrc/lib -Itest -Isrc/nemeco -Itest/nemeco)
 
 DEBUG_TEST_NEOSCAN = tmp/debug/test/neoscan/test.main.o tmp/debug/test/neoscan/test.neoscan.o
@@ -280,9 +282,11 @@ tmp/release/test/lib/test.svg_tree.o: test/lib/test.svg_tree.cpp test/lib/test.m
 tmp/release/test/lib/test.vec2.o: test/lib/test.vec2.cpp test/lib/test.main.hpp test/test.hpp src/lib/jade.vec2.hpp src/lib/jade.system.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/lib -Itest/lib)
 
-RELEASE_TEST_NEMECO = tmp/release/test/nemeco/test.main.o
+RELEASE_TEST_NEMECO = tmp/release/test/nemeco/test.main.o tmp/release/test/nemeco/test.settings.o
 
 tmp/release/test/nemeco/test.main.o: test/nemeco/test.main.cpp test/nemeco/test.main.hpp test/test.hpp
+	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/nemeco -Itest/nemeco)
+tmp/release/test/nemeco/test.settings.o: test/nemeco/test.settings.cpp test/nemeco/test.main.hpp test/test.hpp src/nemeco/jade.settings.hpp src/lib/jade.agi_reader.hpp src/lib/jade.shunting_yard.hpp src/lib/jade.error.hpp src/lib/jade.assert.hpp src/lib/jade.system.hpp src/lib/jade.genotype_matrix_factory.hpp src/lib/jade.discrete_genotype_matrix.hpp src/lib/jade.genotype.hpp src/lib/jade.verification.hpp src/lib/jade.genotype_matrix.hpp src/lib/jade.matrix.hpp src/lib/jade.openblas.hpp src/lib/jade.likelihood_genotype_matrix.hpp src/nemeco/jade.options.hpp src/lib/jade.args.hpp
 	@ $(call .compile,$<,$@,$(RELEASE_CXXFLAGS) -Isrc/lib -Itest -Isrc/nemeco -Itest/nemeco)
 
 RELEASE_TEST_NEOSCAN = tmp/release/test/neoscan/test.main.o tmp/release/test/neoscan/test.neoscan.o
