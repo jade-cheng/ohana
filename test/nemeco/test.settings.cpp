@@ -19,20 +19,13 @@ namespace
             { +0.8, -0.7, +0.4 }
         };
 
-        const matrix_type mu
-        {
-            { 0.1 },
-            { 0.3 },
-            { 0.2 },
-        };
-
-        const auto actual = settings_type::create_c(rf, mu);
+        const auto actual = settings_type::create_c(rf);
 
         const matrix_type expected
         {
-            { +2.87103, -1.73843, +2.79200 },
-            { -1.73843, +1.11150, -1.39622 },
-            { +2.79200, -1.39622, +4.18689 }
+            { +8.32000, -5.12000, +7.68000 },
+            { -5.12000, +3.25333, -4.21333 },
+            { +7.68000, -4.21333, +9.65333 }
         };
 
         TEST_EQUAL(size_t(3), actual.get_width());

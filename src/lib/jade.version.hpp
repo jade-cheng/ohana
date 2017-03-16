@@ -30,7 +30,7 @@ namespace jade
                 char_type const * const title, ///< The program name.
                 ostream_type &          out)   ///< The output stream.
         {
-            static const values current { 0, 0, 6273, 34141, 2015, 2017 };
+            static const values current { 0, 0, 6284, 18635, 2015, 2017 };
 
             out << "ohana/" << title << ' '
                 << current.major << '.'

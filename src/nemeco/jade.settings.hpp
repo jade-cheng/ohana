@@ -110,7 +110,7 @@ namespace jade
             }
             else
             {
-                _c = create_c(_rf, _mu);
+                _c = create_c(_rf);
             }
 
             verification_type::validate_gf_sizes(g, _f);
@@ -159,18 +159,16 @@ namespace jade
 
         // --------------------------------------------------------------------
         static matrix_type create_c(
-                const matrix_type & rf, ///< The [RK x 1] rooted F matrix.
-                const matrix_type & mu) ///< The [J x 1] sample allele freq.
+                const matrix_type & rf) ///< The [RK x 1] rooted F matrix.
         {
             const auto RK = rf.get_height();
             const auto J  = rf.get_width();
 
             assert(J > 1);
-            assert(mu.is_size(J, 1));
 
-            static const auto n1  = value_type(1.0);
-            const auto        nj  = static_cast<value_type>(J);
-            const auto        nj1 = static_cast<value_type>(J - 1);
+            static const auto n0_25 = value_type(0.25);
+            const auto        nj    = static_cast<value_type>(J);
+            const auto        s     = static_cast<value_type>(J - 1) / n0_25;
 
             //
             // Create a vector of average row values for the RF matrix.
@@ -190,12 +188,9 @@ namespace jade
             //
             for (size_t j = 0; j < J; j++)
             {
-                const auto mu_j = mu[j];
-                const auto s_j  = n1 / (mu_j * (n1 - mu_j)) / nj1;
-
                 for (size_t row = 0; row < RK; row++)
                 {
-                    const auto s_row = s_j * (rf(row, j) - rf_avg[row]);
+                    const auto s_row = s * (rf(row, j) - rf_avg[row]);
                     for (size_t col = 0; col <= row; col++)
                         c(row, col) += s_row * (rf(col, j) - rf_avg[col]);
                 }
