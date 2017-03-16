@@ -166,9 +166,11 @@ namespace jade
 
             assert(J > 1);
 
+            static const auto n1    = value_type(1.0);
             static const auto n0_25 = value_type(0.25);
             const auto        nj    = static_cast<value_type>(J);
-            const auto        s     = static_cast<value_type>(J - 1) / n0_25;
+            const auto        nj1   = static_cast<value_type>(J - 1);
+            const auto        s     = n1 / nj1 / n0_25;
 
             //
             // Create a vector of average row values for the RF matrix.
