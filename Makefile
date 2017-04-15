@@ -7,7 +7,7 @@ CXXFLAGS += -Wall -Weffc++ -Wextra -Wcast-align -Wconversion
 CXXFLAGS += -Wfloat-equal -Wformat=2 -Wmissing-declarations
 CXXFLAGS += -Woverlength-strings -Wshadow -Wunreachable-code
 CXXFLAGS += -isystem $(OPENBLAS)/include
-LDFLAGS   = -llapack -L$(OPENBLAS)/lib -lopenblas
+LDFLAGS   = -L$(OPENBLAS)/lib -lopenblas
 
 RELEASE_CXXFLAGS = $(CXXFLAGS) -DNDEBUG -O3 -msse -msse2 -msse3 -mfpmath=sse
 RELEASE_LDFLAGS  = $(LDFLAGS)
