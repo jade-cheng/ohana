@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -45,7 +45,7 @@ namespace jade
             const auto rk = c.get_height();
             if (rk < 1)
                 throw error() << "invalid C matrix size " << c.get_size_str()
-                              << " does not contain at least two populations";
+                              << " does not contain at least two components";
 
             for (size_t y = 0; y < rk; y++)
                 for (size_t x = y + 1; x < rk; x++)
@@ -82,7 +82,7 @@ namespace jade
 
             if (K < 2)
                 throw error() << "invalid F matrix size " << f.get_size_str()
-                              << " does not contain at least two popualtions";
+                              << " does not contain at least two components";
 
             if (J < 2)
                 throw error() << "invalid F matrix size " << f.get_size_str()
@@ -206,7 +206,7 @@ namespace jade
 
             if (K < 2)
                 throw error() << "invalid Q matrix size " << q.get_size_str()
-                              << " does not contain at least two populations";
+                              << " does not contain at least two components";
 
             for (size_t i = 0; i < I; i++)
             {

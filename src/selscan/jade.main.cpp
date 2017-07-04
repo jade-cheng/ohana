@@ -33,7 +33,7 @@ DESCRIPTION
   values, but it is possible to specify a scaling matrix using the --c-scale
   option.
 
-  There are 'I' individuals, 'K' populations, and 'J' markers. The sizes of
+  There are 'I' individuals, 'K' components, and 'J' markers. The sizes of
   the matrices evaluated by this program are:
 
   G matrix    [I x J]     the path to a genotype matrix; the format of the file
@@ -46,7 +46,7 @@ DESCRIPTION
 
   [Notation]
 
-  K := Number of Populations
+  K := Number of Components
      This value must be greater than or equal to two.
 
   I := Number of Individuals

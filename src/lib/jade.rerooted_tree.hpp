@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -137,7 +137,7 @@ namespace jade
             const auto k          = leaf_nodes.size();
 
             //
-            // Ensure there is at least one population.
+            // Ensure there is at least one component.
             //
             if (k == 0)
                 throw error()
@@ -164,7 +164,7 @@ namespace jade
 
             //
             // Ensure leafs are named numerically based on their
-            // corresponding population; e.g. "0", "1", "2", etc.
+            // corresponding component; e.g. "0", "1", "2", etc.
             //
             for (size_t index = 0; index < k; index++)
             {

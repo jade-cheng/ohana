@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -15,7 +15,7 @@ namespace jade
     /// A template for a class that reads an AGI (Admixture Graph Input) file.
     /// The file provides the following information: A set of branch length
     /// variable names, a set of admixture proportion parameter names, a
-    /// population size (K), and K*(K-1)/2 number of expressions representing
+    /// component size (K), and K*(K-1)/2 number of expressions representing
     /// C matrix entries.
     ///
     /// An example of the file format is as follows:
@@ -192,8 +192,8 @@ namespace jade
         }
 
         ///
-        /// Returns the number of populations.
-        /// \return The number of populations.
+        /// Returns the number of components.
+        /// \return The number of components.
         ///
         std::size_t get_k() const
         {

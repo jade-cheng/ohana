@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -82,7 +82,8 @@ namespace jade
             {
                 throw error()
                     << "at least one of --ksize, --qin, --fin, or --force must "
-                    << "be specified in order to determine the population size";
+                    << "be specified in order to determine the number of "
+                    << "components";
             }
 
             if (!is_fin_specified() && _fixed_f)

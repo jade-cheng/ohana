@@ -34,7 +34,7 @@ To facilitate different stages of the analysis, we provide several conversion su
 
 ### qpas and cpax
 
-Under the assumption of Hardy Weinberg Equilibrium, the likelihood of assigning an observed genotype `g` in individual `i` at locus `j` to ancestral component `k` is a function of the allelic frequency `f_kj` of the locus at `k` and the fraction of the genome of the individual `q_ik` that comes from that population.  We thus consider the likelihood of the ancestral population proportions vector `Q` and their vector of allele frequencies `F`.  In particular, if we denote `K` as the number of ancestry components, `I` as the number of individuals, and `J` as the number of polymorphic sites among the `I` individuals, then the log likelihood of observing the genotype is:
+Under the assumption of Hardy Weinberg Equilibrium, the likelihood of assigning an observed genotype `g` in individual `i` at locus `j` to ancestral component `k` is a function of the allelic frequency `f_kj` of the locus at `k` and the fraction of the genome of the individual `q_ik` that comes from that component.  We thus consider the likelihood of the ancestral component proportions vector `Q` and their vector of allele frequencies `F`.  In particular, if we denote `K` as the number of ancestry components, `I` as the number of individuals, and `J` as the number of polymorphic sites among the `I` individuals, then the log likelihood of observing the genotype is:
 
     sum_i sum_j {
       g_ij * ln[sum_k (q_ik * f_kj)] +
@@ -67,7 +67,7 @@ We denote `C` as the covariance matrix to be inferred.  We denote the allele fre
 
 ### selscan
 
-We scan for covariance outliers by applying a likelihood model to each locus, similar to the one used genome-wide but with certain scalar factor variations. This creates a nested likelihood model.  Through a likelihood ratio test, it identifies loci in which the variance among populations is larger than expected from the genome-wide estimated covariance matrix.
+We scan for covariance outliers by applying a likelihood model to each locus, similar to the one used genome-wide but with certain scalar factor variations. This creates a nested likelihood model.  Through a likelihood ratio test, it identifies loci in which the variance among components is larger than expected from the genome-wide estimated covariance matrix.
 
 
 ## Workflow
@@ -109,7 +109,7 @@ A typical workflow of genetic data analysis using `Ohana` starts with structure 
 For genotype likelihoods, first prepare the data in beagle format; then convert the it to an .lgm file.
 
     $ head -n 4 sample.bgl | cut -c1-78
-    marker allelel1 allelel2 Ind0     Ind0     Ind0     Ind1     Ind1     Ind1    
+    marker allelel1 allelel2 Ind0     Ind0     Ind0     Ind1     Ind1     Ind1
     0      0        0        0.000133 0.333287 0.666580 0.333333 0.333333 0.333333
     1      0        0        0.000001 0.998406 0.001593 0.333333 0.333333 0.333333
     2      0        0        0.000053 0.999946 0.000001 0.333333 0.333333 0.333333
@@ -145,7 +145,7 @@ The standard output from `qpas` contains four columns: iteration number, time el
 
     python ./tools/plot_q.py ./q.matrix ./q-bar-chart.pdf
 
-The `-fo` output file records the allele frequency inference, which can be used to estimate population covariances with `nemeco`.
+The `-fo` output file records the allele frequency inference, which can be used to estimate component covariances with `nemeco`.
 
     $ nemeco ./g.lgm ./f.matrix -co c.matrix -mi 5
     iter   duration   delta-lle      log-likelihood
@@ -175,7 +175,7 @@ The `-fo` output file records the allele frequency inference, which can be used 
     7.182917e-02   1.599473e-01   7.554783e-02
     9.315245e-02   7.554783e-02   2.084383e-01
 
-We approximate the estimated covariance matrix into a population tree using `cov2nwk`, and produce a visualization of the tree using `nwk2svg`.  For a better visualization of the inferred Newick tree, copy the nwk file contents and visit `nemetree` at http://www.jade-cheng.com/trees/
+We approximate the estimated covariance matrix into a component tree using `cov2nwk`, and produce a visualization of the tree using `nwk2svg`.  For a better visualization of the inferred Newick tree, copy the nwk file contents and visit `nemetree` at http://www.jade-cheng.com/trees/
 
     $ convert cov2nwk ./c.matrix ./tree.nwk
 
@@ -188,7 +188,7 @@ If the intermediate Newick file is unneeded, it is possible to pipe output throu
 
     $ cat ./c.matrix | convert cov2nwk | convert nwk2svg > ./tree.svg
 
-With the inferred population covariances and allele frequencies, we scan for covariance outliers.  The standard output from `selscan` contains four columns, the scalar value when local best likelihood is reached, the local log likelihood obeying global covariances, the local optimal log likelihood, and the likelihood ratio of this locus.  The total number and order of loci match with the input genotype data.
+With the inferred component covariances and allele frequencies, we scan for covariance outliers.  The standard output from `selscan` contains four columns, the scalar value when local best likelihood is reached, the local log likelihood obeying global covariances, the local optimal log likelihood, and the likelihood ratio of this locus.  The total number and order of loci match with the input genotype data.
 
     $ selscan ./g.dgm ./f.matrix c.matrix > lle-ratios.txt
     $ selscan ./g.lgm ./f.matrix c.matrix > lle-ratios.txt
@@ -216,7 +216,7 @@ If selection study is the goal, the first step should be to obtain a full genome
 
 For faster analysis and smaller memory footprints, we recommend performing the last two steps in parallel.  For example, suppose we have the full genome dataset `HGDP.ped`, we have split it into three pieces, each containing 1/3 of the markers, and the files are named `HGDP1.ped`, `HGDP2.ped`, and `HGDP3.ped`.
 
-We first down-sample the full dataset to perform structure analysis and then infer the population covariances.
+We first down-sample the full dataset to perform structure analysis and then infer the component covariances.
 
     python ./sample-sites.py ./HGDP.dgm 5 ./HGDP_5percent.dgm
     qpas ./HGDP_5percent.dgm -e 0.0001 -k 7 -qo ./HGDP_5percent_Q.matrix -fo ./HGDP_5percent_F.matrix
@@ -238,10 +238,10 @@ We then produce admixture-corrected allele frequencies and perform the selection
 
     cat scan*.txt > scan_all.txt
 
-The file `scan_all.txt` contains selection results for the full dataset with markers following the order defined in HGDP.ped.  
+The file `scan_all.txt` contains selection results for the full dataset with markers following the order defined in HGDP.ped.
 
 ## License
-Copyright (c) 2015-2016 Jade Cheng<br>
+Copyright (c) 2015-2017 Jade Cheng<br>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

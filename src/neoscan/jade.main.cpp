@@ -35,7 +35,7 @@ DESCRIPTION
 
   [Notation]
 
-  K := Number of Populations
+  K := Number of Components
      This value must be greater than or equal to two.
 
   I := Number of Individuals

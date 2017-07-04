@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -33,11 +33,11 @@ OPTIONS
   --fout,-fo                    indicates the next argument is the path to the
                                 computed F matrix
   --force,-fg                   indicates the next argument is the path to a
-                                file identifying an assignment of populations
+                                file identifying an assignment of components
                                 for each individual and a range of Q values for
-                                each population
+                                each component
   --ksize,-k                    indicates the next argument is the number of
-                                populations; this value must be at least two
+                                components; this value must be at least two
   --max-iterations,-mi          indicates the next argument is the maximum
                                 number of iterations to execute the algorithm;
                                 this value must be greater than or equal to
@@ -56,14 +56,14 @@ OPTIONS
                                 random number generator
 
   At least one of --ksize, --qin, --fin, or --force must be specified in order
-  to determine the number of populations (K).
+  to determine the number of components (K).
 
 DESCRIPTION
   Under the assumption of Hardy Weinberg Equilibrium, the likelihood of
-  assigning an observed genotype g in individual i at locus j to population k
+  assigning an observed genotype g in individual i at locus j to component k
   is a function of the allelic frequency f_kj of the locus at k and the
   fraction of the genome of the individual q_ik that comes from that
-  population.  We thus consider the likelihood of the ancestral population
+  component.  We thus consider the likelihood of the ancestral component
   proportions vector Q and their vector of allele frequencies F.  In
   particular, if we denote K as the number of ancestry components, I as the
   number of individuals, and J as the number of polymorphic sites among the I
@@ -94,7 +94,7 @@ DESCRIPTION
 
   [Notation]
 
-  K := Number of Populations
+  K := Number of Components
      This value must be greater than or equal to two.
 
   I := Number of Individuals
@@ -153,18 +153,17 @@ DESCRIPTION
   A forced-grouping file is an ASCII file in the following format.  All values
   are separated by whitespace, and lines beginning with '#' are treated as
   comments and ignored.  The first value indicates the number of individuals
-  (N), the second value indicates the number of populations (K), the next N
-  values represent the population index (0 to K, exclusive) for each
-  individual, and the remaining values represent K matrices of ranges for the Q
-  matrix.  Each matrix is [2K x 1] in which the first K values indicate the
-  minimum Q values, and the last K values indicate the maximum Q values.  For
-  example, the following represents a forged-grouping of 15 individuals in 3
-  populations:
+  (N), the second value indicates the number of components (K), the next N
+  values represent the population index for each individual, and the remaining
+  values represent matrices of ranges for the Q matrix.  Each matrix is
+  [2K x 1] in which the first K values indicate the minimum Q values, and the
+  last K values indicate the maximum Q values.  For example, the following
+  represents a forged-grouping of 15 individuals in 3 components:
 
-  # 'I' Individuals and 'K' Populations
+  # 'I' Individuals and 'K' Components
   15 3
 
-  # Population Assignments per Individual
+  # Component Assignments per Individual
   0 1 2 0 0 0 1 1 1 0 0 1 2 2 2
 
   # Population 0
@@ -199,7 +198,7 @@ EXAMPLES
 BUGS
   Report any bugs to Jade Cheng <info@jade-cheng.com>.
 
-Copyright (c) 2015-2016 Jade Cheng
+Copyright (c) 2015-2017 Jade Cheng
 )";
 }
 

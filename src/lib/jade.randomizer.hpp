@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -44,7 +44,7 @@ namespace jade
         /// \return A random F matrix.
         ///
         matrix_type randomize_f(
-                const size_t        K,  ///< The population size.
+                const size_t        K,  ///< The component count.
                 const matrix_type & mu) ///< The mu vector.
         {
             static const auto sigma   = value_type(0.1);
@@ -79,7 +79,7 @@ namespace jade
         ///
         matrix_type randomize_q(
                 const size_t I, ///< The number of individuals.
-                const size_t K) ///< The number of populations.
+                const size_t K) ///< The number of components.
         {
             static const auto K_0 = value_type(0);
             static const auto K_1 = value_type(1);

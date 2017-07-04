@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -102,7 +102,7 @@ namespace jade
 
                 if (agi_k != f_k)
                     throw jade::error()
-                        << "inconsistent population sizes " << agi_k << " and "
+                        << "inconsistent component sizes " << agi_k << " and "
                         << f_k << " in AGI file and F matrix.";
 
                 const auto rk = _rf.get_height();

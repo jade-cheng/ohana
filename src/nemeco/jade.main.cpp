@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -55,7 +55,7 @@ DESCRIPTION
 
   [Notation]
 
-  K := Number of Populations
+  K := Number of Components
      This value must be greater than or equal to two.
 
   I := Number of Individuals
@@ -86,11 +86,11 @@ DESCRIPTION
 
   An Admixture Graph Input (AGI) file is an ASCII file that specifies parameter
   names for branch lengths, parameter names for admixture proportions, a number
-  of populations, and expressions that are evaluated to compose the rooted
+  of components, and expressions that are evaluated to compose the rooted
   covariance matrix.  At least one branch length parameter and at least one
   proportion parameter must be defined, but not all parameters must be used in
   the expressions.  For example, the following represents an admixture graph
-  with three populations, one admixture event, and rooted at population A:
+  with three components, one admixture event, and rooted at component A:
 
     #         f/ \
     #         /   \g
@@ -130,7 +130,7 @@ EXAMPLES
 BUGS
   Report any bugs to Jade Cheng <info@jade-cheng.com>.
 
-Copyright (c) 2015-2016 Jade Cheng
+Copyright (c) 2015-2017 Jade Cheng
 )";
 }
 

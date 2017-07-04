@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2016 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -60,7 +60,7 @@ namespace jade
 
                 if (!(in >> _k) || _k == 0)
                     throw error()
-                        << "error parsing number of populations";
+                        << "error parsing number of components";
 
                 _a.reserve(_i);
 
@@ -70,7 +70,7 @@ namespace jade
 
                     if (!(in >> value))
                         throw error()
-                            << "error parsing population assignment "
+                            << "error parsing component assignment "
                             << "for individual " << i+1;
 
                     _a.push_back(value);
@@ -122,7 +122,7 @@ namespace jade
         }
 
         ///
-        /// \return The number of populations.
+        /// \return The number of components.
         ///
         inline size_t get_k() const
         {
@@ -130,11 +130,11 @@ namespace jade
         }
 
         ///
-        /// \return The maximum value for a specified individual and population.
+        /// \return The maximum value for a specified individual and component.
         ///
         inline value_type get_max(
                 const size_t i, ///< The individual index.
-                const size_t k) ///< The population index.
+                const size_t k) ///< The component index.
                 const
         {
             assert(i < _i);
@@ -143,11 +143,11 @@ namespace jade
         }
 
         ///
-        /// \return The minimim value for a specified individual and population.
+        /// \return The minimim value for a specified individual and component.
         ///
         inline value_type get_min(
                 const size_t i, ///< The individual index.
-                const size_t k) ///< The population index.
+                const size_t k) ///< The component index.
                 const
         {
             assert(i < _i);
@@ -222,7 +222,7 @@ namespace jade
         {
             if (_k != q.get_width())
                 throw error()
-                    << "inconsistent number of populations specified in "
+                    << "inconsistent number of components specified in "
                     << "forced-grouping file (" << _k << ") and "
                     << q.get_size_str() << " Q matrix";
 
@@ -311,7 +311,7 @@ namespace jade
 
             if (_k < 2)
                 throw error()
-                    << "invalid number of populations: " << _k
+                    << "invalid number of components: " << _k
                     << "; expected at least 2";
 
             const auto k2 = 2 * _k;
@@ -361,10 +361,10 @@ namespace jade
             }
         }
 
-        std::vector<size_t>      _a; // [K] population assignments
+        std::vector<size_t>      _a; // [K] component assignments
         std::vector<matrix_type> _b; // [K][2K x 1] proportion ranges
         size_t                   _i; // number of individuals
-        size_t                   _k; // number of populations
+        size_t                   _k; // number of components
     };
 }
 
