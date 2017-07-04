@@ -54,11 +54,11 @@ namespace jade
             {
                 std::istringstream in (_strip_comments(path));
 
-                if (!(in >> _i))
+                if (!(in >> _i) || _i == 0)
                     throw error()
                         << "error parsing number of individuals";
 
-                if (!(in >> _k))
+                if (!(in >> _k) || _k == 0)
                     throw error()
                         << "error parsing number of populations";
 
@@ -76,9 +76,11 @@ namespace jade
                     _a.push_back(value);
                 }
 
-                _b.reserve(_k);
+                const auto P = 1 + *std::max_element(_a.begin(), _a.end());
 
-                for (size_t k = 0; k < _k; k++)
+                _b.reserve(P);
+
+                for (size_t p = 0; p < P; p++)
                 {
                     try
                     {
@@ -88,7 +90,7 @@ namespace jade
                     {
                         throw error()
                             << "error reading B vector for population index "
-                            << k << ": " << e.what();
+                            << p << ": " << e.what();
                     }
                 }
 
@@ -276,16 +278,19 @@ namespace jade
 
             std::ostringstream out;
 
-            for (int n = 1; in.good(); n++)
+            for (auto n = 1;; n++)
             {
                 std::string line;
                 std::getline(in, line);
 
-                if (in.fail())
-                    throw jade::error() << "error reading file at line " << n;
-
-                if (line.length() > 0 && line[0] != '#')
+                if (!line.empty() && line[0] != '#')
                     out << line << std::endl;
+
+                if (in.eof())
+                    break;
+
+                if (!in.good())
+                    throw jade::error() << "error reading file at line " << n;
             }
 
             return out.str();
@@ -309,14 +314,6 @@ namespace jade
                     << "invalid number of populations: " << _k
                     << "; expected at least 2";
 
-            for (size_t i = 0; i < _i; i++)
-                if (_a[i] >= _k)
-                    throw error()
-                        << "invalid population assignment (" << _a[i]
-                        << ") for individual " << i+1
-                        << "; expected a value between 0 and " << _k-1
-                        << ", inclusive";
-
             const auto k2 = 2 * _k;
 
             for (size_t k = 0; k < _k; k++)
@@ -332,7 +329,7 @@ namespace jade
                 auto min_sum = value_type(0);
                 for (size_t kk = 0; kk < _k; kk++)
                     min_sum += b_k[kk];
-                if (min_sum >= value_type(1))
+                if (min_sum > value_type(1))
                     throw error()
                         << "invalid B vector for population index " << k
                         << ": the sum of the first " << _k
@@ -341,7 +338,7 @@ namespace jade
                 auto max_sum = value_type(0);
                 for (size_t kk = 0; kk < _k; kk++)
                     max_sum += b_k[_k + kk];
-                if (max_sum >= value_type(1))
+                if (max_sum < value_type(1))
                     throw error()
                         << "invalid B vector for population index " << k
                         << ": the sum of the last " << _k
