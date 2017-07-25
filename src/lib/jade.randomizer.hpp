@@ -8,6 +8,7 @@
 #define JADE_RANDOMIZER_HPP__
 
 #include "jade.matrix.hpp"
+#include "jade.verification.hpp"
 
 namespace jade
 {
@@ -23,6 +24,9 @@ namespace jade
 
         /// The matrix type.
         typedef basic_matrix<value_type> matrix_type;
+
+        /// The verification type.
+        typedef basic_verification<value_type> verification_type;
 
         ///
         /// Initializes a new instance of the class.
@@ -67,6 +71,45 @@ namespace jade
                     dist (mu[j], sigma);
 
                 for (size_t k = 0; k < K; k++)
+                    f(k, j) = std::min(std::max(
+                        min, dist(_engine)), max);
+            }
+
+            return f;
+        }
+
+        ///
+        /// \return A random F matrix.
+        ///
+        matrix_type randomize_f(
+                const size_t        K,   ///< The component count.
+                const matrix_type & mu,  ///< The mu vector.
+                const matrix_type & fif) ///< The fin-force matrix.
+        {
+            static const auto sigma   = value_type(0.1);
+            static const auto epsilon = value_type(1.0e-6);
+            static const auto min     = value_type(0.0) + epsilon;
+            static const auto max     = value_type(1.0) - epsilon;
+
+            assert(K > 0);
+            assert(mu.is_column_vector());
+            assert(mu.all_of([](const value_type n)
+                { return n >= min && n <= max; }));
+
+            const auto J = mu.get_length();
+            assert(verification_type::validate_fif_size(fif, K, J));
+
+            matrix_type f (K, J);
+
+            for (size_t j = 0; j < J; j++)
+            {
+                static std::normal_distribution<value_type>
+                    dist (mu[j], sigma);
+
+                for (size_t k = 0; k < fif.get_height(); k++)
+                    f(k, j) = fif(k, j);
+
+                for (size_t k = fif.get_height(); k < K; k++)
                     f(k, j) = std::min(std::max(
                         min, dist(_engine)), max);
             }

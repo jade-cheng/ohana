@@ -25,7 +25,11 @@ OPTIONS
                                 value must be greater than or equal to zero
   --help,-h                     shows this help message and exits
   --fin,-fi                     indicates the next argument is the path to the
-                                initial F matrix
+                                initial F matrix; this option cannot be used
+                                with the --fin-force option
+  --fin-force,-fif              indicates the next argument is the path to a
+                                portion of the initial F matrix; this option
+                                cannot be used with the --fin option
   --fixed-f,-ff                 indicates the optimizer should not optimize the
                                 specified F matrix
   --fixed-q,-fq                 indicates the optimizer should not optimize the

@@ -47,6 +47,7 @@ namespace jade
                 args & a) ///< The command-line arguments.
             : _epsilon        (a.read("--epsilon", "-e", no_epsilon))
             , _fin            (a.read<std::string>("--fin", "-fi"))
+            , _fin_force      (a.read<std::string>("--fin-force", "-fif"))
             , _force          (a.read<std::string>("--force", "-fg"))
             , _fout           (a.read<std::string>("--fout",  "-fo"))
             , _ksize          (a.read("--ksize", "-k", no_ksize))
@@ -86,6 +87,10 @@ namespace jade
                     << "components";
             }
 
+            if (is_fin_specified() && is_fin_force_specified())
+                throw error() << "invalid specification of --fin option "
+                              << "with --fin-force option";
+
             if (!is_fin_specified() && _fixed_f)
                 throw error() << "invalid specification of --fixed-f option "
                               << "without --fin option";
@@ -119,6 +124,15 @@ namespace jade
         {
             assert(is_fin_specified());
             return _fin;
+        }
+
+        ///
+        /// \return The fin-force value.
+        ////
+        inline const std::string & get_fin_force() const
+        {
+            assert(is_fin_force_specified());
+            return _fin_force;
         }
 
         ///
@@ -217,6 +231,14 @@ namespace jade
         }
 
         ///
+        /// \return True if the fin-force option is specified.
+        ///
+        inline bool is_fin_force_specified() const
+        {
+            return !_fin_force.empty();
+        }
+
+        ///
         /// \return The fixed F value.
         ///
         inline bool is_fixed_f() const
@@ -300,6 +322,7 @@ namespace jade
         // options with arguments
         const value_type  _epsilon;
         const std::string _fin;
+        const std::string _fin_force;
         const std::string _force;
         const std::string _fout;
         const size_t      _ksize;

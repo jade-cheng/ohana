@@ -13,61 +13,65 @@ namespace
   cpax [options] <g-matrix>
 
 ARGUMENTS
-  g-matrix                    the path to a genotype matrix; the format of
-                              the file is determined based on the extension,
-                              .dgm (discrete genotype matrix) or
-                              .lgm (likelihood genotype matrix)
+  g-matrix                      the path to a genotype matrix; the format of
+                                the file is determined based on the extension,
+                                .dgm (discrete genotype matrix) or
+                                .lgm (likelihood genotype matrix)
 
 OPTIONS
-  --epsilon,-e                indicates the next argument is the epsilon
-                              value; i.e. the minimum difference between
-                              likelihood calculations per iteration; this
-                              value must be greater than or equal to zero
-  --help,-h                   shows this help message and exits
-  --fin,-fi                   indicates the next argument is the path to the
-                              initial F matrix
-  --fixed-f,-ff               indicates the optimizer should not optimize the
-                              specified F matrix
-  --fixed-q,-fq               indicates the optimizer should not optimize the
-                              specified Q matrix
-  --fout,-fo                  indicates the next argument is the path to the
-                              computed F matrix
-  --force,-fg                 indicates the next argument is the path to a
-                              file identifying an assignment of components
-                              for each individual and a range of Q values for
-                              each component
-  --ksize,-k                  indicates the next argument is the number of
-                              components; this value must be at least two
-  --max-iterations,-mi        indicates the next argument is the maximum
-                              number of iterations to execute the algorithm;
-                              this value must be greater than or equal to
-                              zero
-  --max-time,-mt              indicates the next argument is the maximum time
-                              in seconds to execute the algorithm; this value
-                              must be greater than or equal to zero
-  --num-threads,-nt (1)       indicates the next argument is the number of
-                              threads to request for OpenBLAS operations;
-                              this value must be greater than zero
-  --qin,-qi                   indicates the next argument is the path to the
-                              initial Q matrix
-  --qout,-qo                  indicates the next argument is the path to the
-                              computed Q matrix
-  --seed,-s                   indicates the next argument is the seed for the
-                              random number generator
+  --epsilon,-e                  indicates the next argument is the epsilon
+                                value; i.e. the minimum difference between
+                                likelihood calculations per iteration; this
+                                value must be greater than or equal to zero
+  --help,-h                     shows this help message and exits
+  --fin,-fi                     indicates the next argument is the path to the
+                                initial F matrix; this option cannot be used
+                                with the --fin-force option
+  --fin-force,-fif              indicates the next argument is the path to a
+                                portion of the initial F matrix; this option
+                                cannot be used with the --fin option
+  --fixed-f,-ff                 indicates the optimizer should not optimize the
+                                specified F matrix
+  --fixed-q,-fq                 indicates the optimizer should not optimize the
+                                specified Q matrix
+  --fout,-fo                    indicates the next argument is the path to the
+                                computed F matrix
+  --force,-fg                   indicates the next argument is the path to a
+                                file identifying an assignment of components
+                                for each individual and a range of Q values for
+                                each component
+  --ksize,-k                    indicates the next argument is the number of
+                                components; this value must be at least two
+  --max-iterations,-mi          indicates the next argument is the maximum
+                                number of iterations to execute the algorithm;
+                                this value must be greater than or equal to
+                                zero
+  --max-time,-mt                indicates the next argument is the maximum time
+                                in seconds to execute the algorithm; this value
+                                must be greater than or equal to zero
+  --num-threads,-nt (1)         indicates the next argument is the number of
+                                threads to request for OpenBLAS operations;
+                                this value must be greater than zero
+  --qin,-qi                     indicates the next argument is the path to the
+                                initial Q matrix
+  --qout,-qo                    indicates the next argument is the path to the
+                                computed Q matrix
+  --seed,-s                     indicates the next argument is the seed for the
+                                random number generator
 
   At least one of --ksize, --qin, --fin, or --force must be specified in order
   to determine the number of components (K).
 
 DESCRIPTION
   Under the assumption of Hardy Weinberg Equilibrium, the likelihood of
-  assigning an observed genotype g in individual i at locus j to component k is
-  a function of the allelic frequency f_kj of the locus at k and the fraction of
-  the genome of the individual q_ik that comes from that component.  We thus
-  consider the likelihood of the ancestral component proportions vector Q and
-  their vector of allele frequencies F.  In particular, if we denote K as the
-  number of ancestry components, I as the number of individuals, and J as the
-  number of polymorphic sites among the I individuals, then the probability of
-  observing the genotype is:
+  assigning an observed genotype g in individual i at locus j to component k
+  is a function of the allelic frequency f_kj of the locus at k and the
+  fraction of the genome of the individual q_ik that comes from that
+  component.  We thus consider the likelihood of the ancestral component
+  proportions vector Q and their vector of allele frequencies F.  In
+  particular, if we denote K as the number of ancestry components, I as the
+  number of individuals, and J as the number of polymorphic sites among the I
+  individuals, then the probability of observing the genotype is:
 
   sum_i sum_j {
     g_ij * ln[sum_k (q_ik * f_kj)] +
@@ -75,17 +79,17 @@ DESCRIPTION
   }
 
   To estimate Q and F, we follow Newton's method.  In general, we can
-  approximate a function F with its second order Taylor expansion F_T.  To solve
-  this inequality- and equality-constraint quadratic optimization problem, first
-  we derive the first and second differentials for lnP1(Q, F) with respect to
-  values in Q and F, separately.  Then we incorporate Lemke's algorithm [Murty
-  1988].
+  approximate a function F with its second order Taylor expansion F_T.  To
+  solve this inequality- and equality-constraint quadratic optimization
+  problem, first we derive the first and second differentials for lnP1(Q, F)
+  with respect to values in Q and F, separately.  Then we incorporate Lemke's
+  algorithm [Murty 1988].
 
   [Command-Line Output]
 
-  Unless the --quiet option is specified, the program writes tabular information
-  to standard output.  Each iteration, the program writes a row with the
-  following information:
+  Unless the --quiet option is specified, the program writes tabular
+  information to standard output.  Each iteration, the program writes a row
+  with the following information:
 
   1. iteration Number
   2. seconds expired during the iteration
@@ -133,10 +137,10 @@ DESCRIPTION
   1.0  2.0  3.0  4.0
   5.0  6.0  7.0  8.0
 
-  In the case of the likelihood genotype matrix, three individual matrices exist
-  within the file representing minor-minor, major-minor, and major-major allele
-  frequencies. For example, the following represents a matrix with 2 rows
-  (individuals) and 4 columns (markers):
+  In the case of the likelihood genotype matrix, three individual matrices
+  exist within the file representing minor-minor, major-minor, and major-major
+  allele frequencies. For example, the following represents a matrix with
+  2 rows (individuals) and 4 columns (markers):
 
   2 4
   0.1  0.2  0.3  0.4

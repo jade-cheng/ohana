@@ -45,6 +45,9 @@ namespace jade
         /// The forced grouping pointer type.
         typedef std::unique_ptr<forced_grouping_type> fg_ptr;
 
+        /// The Fin-force pointer type.
+        typedef std::unique_ptr<matrix_type> fif_ptr;
+
         /// The genotype matrix pointer type.
         typedef std::unique_ptr<genotype_matrix_type> g_ptr;
 
@@ -62,6 +65,7 @@ namespace jade
             , _g    (g_matrix_factory_type::create(a.pop<std::string>()))
             , _q    ()
             , _f    ()
+            , _fif  ()
             , _fg   ()
             , _rnd  ()
         {
@@ -83,6 +87,12 @@ namespace jade
                 verification_type::validate_f(_f);
             }
 
+            if (_opts.is_fin_force_specified())
+            {
+                _fif.reset(new matrix_type(_opts.get_fin_force()));
+                verification_type::validate_f(*_fif);
+            }
+
             if (_opts.is_force_specified())
                 _fg.reset(new forced_grouping_type(_opts.get_force()));
 
@@ -92,6 +102,10 @@ namespace jade
                 _opts.is_force_specified() ? _fg->get_k() :
                 _opts.get_ksize();
 
+            if (_fif)
+                verification_type::validate_fif_size(
+                    *_fif, k, _g->get_width());
+
             _rnd.get_engine().seed(_opts.get_seed());
 
             if (!_opts.is_qin_specified())
@@ -99,7 +113,9 @@ namespace jade
                         ? _fg->randomize_q(_rnd)
                         : _rnd.randomize_q(n ,k);
 
-            if (!_opts.is_fin_specified())
+            if (_opts.is_fin_force_specified())
+                _f = _rnd.randomize_f(k, _g->create_mu(), *_fif);
+            else if (!_opts.is_fin_specified())
                 _f = _rnd.randomize_f(k, _g->create_mu());
 
             verification_type::validate_gqf_sizes(*_g, _q, _f);
@@ -122,6 +138,14 @@ namespace jade
         inline matrix_type & get_f()
         {
             return _f;
+        }
+
+        ///
+        /// \return The Fin-force matrix.
+        ///
+        inline const matrix_type * get_fif() const
+        {
+            return _fif.get();
         }
 
         ///
@@ -178,6 +202,7 @@ namespace jade
         g_ptr           _g;
         matrix_type     _q;
         matrix_type     _f;
+        fif_ptr         _fif;
         fg_ptr          _fg;
         randomizer_type _rnd;
     };

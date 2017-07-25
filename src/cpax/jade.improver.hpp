@@ -47,7 +47,8 @@ namespace jade
                 const matrix_type &          fa,  ///< The F matrix.
                 const matrix_type &          fb,  ///< The 1-F matrix.
                 const matrix_type &          qfa, ///< The Q*F matrix.
-                const matrix_type &          qfb) ///< The Q*(1-F) matrix.
+                const matrix_type &          qfb, ///< The Q*(1-F) matrix.
+                const matrix_type *          fif) ///< The Fin-force matrix.
         {
             assert(verification_type::validate_gqf_sizes(g, q, fa));
             assert(verification_type::validate_gqf_sizes(g, q, fb));
@@ -56,6 +57,8 @@ namespace jade
 
             const auto K = fa.get_height();
             const auto J = fa.get_width();
+            assert(nullptr == fif || verification_type::
+                validate_fif_size(*fif, K, J));
 
             matrix_type f_dst (K, J);
 
@@ -80,7 +83,16 @@ namespace jade
                         hessian_mat);
 
                 const auto a_mat = _create_a_mat(K, false);
-                const auto b_vec = _create_b_vec(f_column, a_mat, shift_vec, false);
+
+                auto b_vec = _create_b_vec(f_column, a_mat, shift_vec, false);
+                if (nullptr != fif)
+                {
+                    for (size_t k = 0; k < fif->get_height(); k++)
+                    {
+                        b_vec[k + 0] = value_type(0);
+                        b_vec[k + K] = value_type(0);
+                    }
+                }
 
                 const auto sqp_q = -hessian_mat;
                 const auto sqp_a = -a_mat;

@@ -52,6 +52,7 @@ namespace jade
 
             const auto & opts = settings.get_options();
             const auto   fg   = settings.get_fg();
+            const auto   fif  = settings.get_fif();
             const auto & g    = settings.get_g();
 
             const stopwatch sw1;
@@ -86,7 +87,7 @@ namespace jade
 
                 if (!opts.is_fixed_f())
                 {
-                    fa = improver_type::improve_f(g, q, fa, fb, qfa, qfb);
+                    fa = improver_type::improve_f(g, q, fa, fb, qfa, qfb, fif);
                     _compute_fb(fa, fb);
                     matrix_type::gemm(q, fa, qfa);
                     matrix_type::gemm(q, fb, qfb);

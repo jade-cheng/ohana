@@ -124,6 +124,34 @@ namespace jade
         }
 
         ///
+        /// Validates the size of the Fin-force matrix and throws an exception
+        /// if validation fails.
+        /// \return True.
+        ///
+        static bool validate_fif_size(
+                const matrix_type & fif, ///< The Fin-force matrix.
+                const size_t        k,   ///< The component count.
+                const size_t        j)   ///< The marker count.
+        {
+            const auto fif_height = fif.get_height();
+            const auto fif_width  = fif.get_width();
+
+            if (fif_width != j)
+                throw error()
+                    << "inconsistent marker count (" << j
+                    << ") and width of matrix specified for --fin-force "
+                    << "option (" << fif_width << ")";
+
+            if (fif_height >= k)
+                throw error()
+                    << "inconsistent component count (" << k << ") and "
+                    << "height of matrix specified for --fin-force "
+                    << "option (" << fif_height << ")";
+
+            return true;
+        }
+
+        ///
         /// Validates the G matrix and throws an exception if validation fails.
         /// \return True.
         ///

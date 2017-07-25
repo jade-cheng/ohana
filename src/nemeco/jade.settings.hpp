@@ -157,7 +157,10 @@ namespace jade
             return _rf;
         }
 
-        // --------------------------------------------------------------------
+        ///
+        /// Creates the covariance matrix.
+        /// \return The covariance matrix.
+        ///
         static matrix_type create_c(
                 const matrix_type & rf) ///< The [RK x 1] rooted F matrix.
         {
@@ -206,8 +209,12 @@ namespace jade
             return c;
         }
 
-        // --------------------------------------------------------------------
-        static matrix_type create_rf(const matrix_type & f)
+        ///
+        /// Creates the rooted F matrix.
+        /// \return The rooted F matrix.
+        ///
+        static matrix_type create_rf(
+                const matrix_type & f) ///< The F matrix for major alleles.
         {
             const auto K = f.get_height();
             const auto J = f.get_width();
@@ -225,6 +232,7 @@ namespace jade
             return rf;
         }
 
+    private:
         options_type _opts;
         agi_ptr_type _agi;
         matrix_type  _f;
