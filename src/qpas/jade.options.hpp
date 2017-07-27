@@ -57,6 +57,7 @@ namespace jade
             , _qin            (a.read<std::string>("--qin", "-qi"))
             , _qout           (a.read<std::string>("--qout", "-qo"))
             , _seed           (a.read("--seed", "-s", std::random_device()()))
+            , _frb            (a.read_flag("--frequency-bounds", "-frb"))
             , _fixed_f        (a.read_flag("--fixed-f", "-ff"))
             , _fixed_q        (a.read_flag("--fixed-q", "-fq"))
             , _quiet          (a.read_flag("--quiet", "-q"))
@@ -102,6 +103,19 @@ namespace jade
             if (is_force_specified() && _fixed_q)
                 throw error() << "invalid specification of --fixed-q option "
                               << "and --force option";
+
+            if (is_frb())
+            {
+                if (is_fin_force_specified())
+                    throw error()
+                        << "invalid specification of --fin-force "
+                        << "and --frequency-bounds options";
+
+                if (is_fixed_f() && is_fin_specified())
+                    throw error()
+                        << "invalid specification of --fixed-f, --fin, "
+                        << "and --frequency-bounds options";
+            }
 
             if (_num_threads == 0)
                 throw error() << "invalid number of threads specified for "
@@ -223,6 +237,14 @@ namespace jade
         }
 
         ///
+        /// \return True if the frequency-bounds option is specified.
+        ///
+        inline bool is_frb() const
+        {
+            return _frb;
+        }
+
+        ///
         /// \return True if the fin option is specified.
         ///
         inline bool is_fin_specified() const
@@ -334,6 +356,7 @@ namespace jade
         const seed_type   _seed;
 
         // options without arguments
+        const bool _frb;
         const bool _fixed_f;
         const bool _fixed_q;
         const bool _quiet;

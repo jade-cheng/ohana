@@ -40,8 +40,13 @@ OPTIONS
                                 file identifying an assignment of components
                                 for each individual and a range of Q values for
                                 each component
+  --frequency-bounds,-frb       indicates the algorithm applies bounds between
+                                1 / (2n + 1) and 1 - (1 / (2n + 1)) for allele
+                                frequencies, where n is the number of
+                                individuals; without this flag, this bounds
+                                are set to 0 and 1
   --ksize,-k                    indicates the next argument is the number of
-                                components; this value must be at least two
+                                components; this value must be at least one
   --max-iterations,-mi          indicates the next argument is the maximum
                                 number of iterations to execute the algorithm;
                                 this value must be greater than or equal to
@@ -99,7 +104,7 @@ DESCRIPTION
   [Notation]
 
   K := Number of Components
-     This value must be greater than or equal to two.
+     This value must be greater than or equal to one.
 
   I := Number of Individuals
      This value must be greater than or equal to two.
@@ -123,7 +128,7 @@ DESCRIPTION
 
   Q := [I x K] Proportion Matrix
      This matrix consists of floating-point values ranging from 0 to 1.  Each
-     row sums to 1.0, and each row contains more than one distinct value.
+     row sums to 1.0.
 
   [Matrix File Format]
 

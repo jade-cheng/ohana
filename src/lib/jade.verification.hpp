@@ -80,9 +80,9 @@ namespace jade
             const auto K = f.get_height();
             const auto J = f.get_width();
 
-            if (K < 2)
+            if (K < 1)
                 throw error() << "invalid F matrix size " << f.get_size_str()
-                              << " does not contain at least two components";
+                              << " does not contain at least one component";
 
             if (J < 2)
                 throw error() << "invalid F matrix size " << f.get_size_str()
@@ -232,44 +232,29 @@ namespace jade
                 throw error() << "invalid Q matrix size " << q.get_size_str()
                               << " does not contain at least two individuals";
 
-            if (K < 2)
+            if (K < 1)
                 throw error() << "invalid Q matrix size " << q.get_size_str()
-                              << " does not contain at least two components";
+                              << " does not contain at least one component";
 
             for (size_t i = 0; i < I; i++)
             {
                 auto sum = value_type(0);
-                auto min = q(i, 0);
-                auto max = q(i, 0);
 
                 for (size_t k = 0; k < K; k++)
                 {
                     const auto q_ik = q(i, k);
 
-                    if (q_ik >= value_type(0) && q_ik <= value_type(1))
-                    {
-                        sum += q_ik;
-                        min = std::min(min, q_ik);
-                        max = std::max(max, q_ik);
-                        continue;
-                    }
+                    if (q_ik < value_type(0) || q_ik > value_type(1))
+                        throw error()
+                            << "invalid Q matrix cell [" << i+1 << "," << k+1
+                            << "] (" << q_ik << ") is not between 0 and 1";
 
-                    throw error()
-                        << "invalid Q matrix cell [" << i+1 << "," << k+1
-                        << "] (" << q_ik << ") is not between 0 and 1";
+                    sum += q_ik;
                 }
 
-                if (std::fabs(sum - value_type(1)) <= epsilon)
-                {
-                    if (std::fabs(max - min) >= epsilon)
-                        continue;
-
+                if (std::fabs(sum - value_type(1)) > epsilon)
                     throw error() << "invalid Q matrix row " << i+1
-                                  << " has only one value (" << min << ")";
-                }
-
-                throw error() << "invalid Q matrix row " << i+1
-                              << " does not sum to 1 (" << sum << ")";
+                                << " does not sum to 1 (" << sum << ")";
             }
 
             return true;

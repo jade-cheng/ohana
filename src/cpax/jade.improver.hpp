@@ -48,13 +48,16 @@ namespace jade
                 const matrix_type &          fb,  ///< The 1-F matrix.
                 const matrix_type &          qfa, ///< The Q*F matrix.
                 const matrix_type &          qfb, ///< The Q*(1-F) matrix.
-                const matrix_type *          fif) ///< The Fin-force matrix.
+                const matrix_type *          fif, ///< The Fin-force matrix.
+                const bool                   frb) ///< Using frequency-bounds.
         {
             assert(verification_type::validate_gqf_sizes(g, q, fa));
             assert(verification_type::validate_gqf_sizes(g, q, fb));
             assert(verification_type::validate_q(q));
             assert(verification_type::validate_f(fa));
+            assert(nullptr == fif || !frb);
 
+            const auto I = g.get_height();
             const auto K = fa.get_height();
             const auto J = fa.get_width();
             assert(nullptr == fif || verification_type::
@@ -67,6 +70,9 @@ namespace jade
 
             matrix_type derivative_vec (K, 1);
             matrix_type hessian_mat    (K, K);
+
+            const auto frb_delta = value_type(1.0) /
+                (value_type(2 * I) + value_type(1.0));
 
             for (size_t j = 0; j < J; j++)
             {
@@ -91,6 +97,14 @@ namespace jade
                     {
                         b_vec[k + 0] = value_type(0);
                         b_vec[k + K] = value_type(0);
+                    }
+                }
+                else if (frb)
+                {
+                    for (size_t k = 0; k < K; k++)
+                    {
+                        b_vec[k + 0] -= frb_delta;
+                        b_vec[k + K] -= frb_delta;
                     }
                 }
 
