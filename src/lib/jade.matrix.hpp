@@ -667,6 +667,45 @@ namespace jade
             return true;
         }
 
+
+        ///
+        /// Returns the minimum and maximum elements in a column. If the
+        /// matrix is empty, this method returns false. Otherwise, this method
+        /// stores the results in the specified arguments and returns true.
+        ///
+        /// \param column The column index.
+        /// \param min    The minimum value (output).
+        /// \param max    The maximum value (output).
+        ///
+        /// \return True if successful; otherwise, false.
+        ///
+        bool get_min_max_column(
+            const size_t column, ///< The column index.
+            value_type & min,    ///< The minimum column element.
+            value_type & max)    ///< The maximum column element.
+            const
+        {
+            assert(column < get_width());
+
+            if (_m.empty())
+                return false;
+
+            auto       ptr = get_data(0, column);
+            auto const end = ptr + get_length();
+
+            min = max = *ptr;
+
+            for (ptr += get_width(); ptr < end; ptr += get_width())
+            {
+                const auto v = *ptr;
+                min = std::min(min, v);
+                max = std::max(max, v);
+            }
+
+            return true;
+        }
+
+
         ///
         /// \return The sum of a row.
         ///

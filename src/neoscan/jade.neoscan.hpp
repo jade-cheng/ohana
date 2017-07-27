@@ -113,29 +113,50 @@ namespace jade
         template <typename TOutputAction>
         void execute(const TOutputAction & output_action) const
         {
-            const auto J         = _g.get_width();
-            const auto step_size = value_type(2.0)
-                                 / static_cast<value_type>(_steps);
+            const auto J = _g.get_width();
 
             for (size_t j = 0; j < J; j++)
             {
+                value_type col_min = 0;
+                value_type col_max = 0;
+                _f.get_min_max_column(j, col_min, col_max);
+
+                const auto range_low  = -col_max;
+                const auto range_high = value_type(1.0) - col_min;
+
                 output out;
                 out.delta      = value_type(0.0);
                 out.global_lle = _compute_lle_j(j, out.delta);
-                out.local_lle  = std::numeric_limits<value_type>::lowest();
+                out.local_lle  = out.global_lle;
 
-                for (size_t s = 0; s <= _steps; s++)
+                static const auto tol = value_type(0.000001);
+                static const auto phi = value_type(0.5 * (sqrt(5.0) + 1.0));
+
+                const auto dr_phi = (range_high - range_low) / phi;
+
+                auto a = range_low;
+                auto b = range_high;
+                auto c = range_high - dr_phi;
+                auto d = range_low  + dr_phi;
+
+                while (std::abs(c - d) > tol)
                 {
-                    const auto delta = step_size * static_cast<value_type>(s)
-                                     - value_type(1.0);
+                    if (_compute_lle_j(j, c) > _compute_lle_j(j, d))
+                        b = d;
+                    else
+                        a = c;
 
-                    const auto lle = _compute_lle_j(j, delta);
+                    c = b - (b - a) / phi;
+                    d = a + (b - a) / phi;
+                }
 
-                    if (lle > out.local_lle)
-                    {
-                        out.local_lle = lle;
-                        out.delta = delta;
-                    }
+                const auto gss_delta = value_type(0.5) * (a + b);
+                const auto gss_lle   = _compute_lle_j(j, gss_delta);
+
+                if (gss_lle > out.local_lle)
+                {
+                    out.delta     = gss_delta;
+                    out.local_lle = gss_lle;
                 }
 
                 output_action(out);
@@ -278,6 +299,9 @@ namespace jade
 
                 for (size_t i = 0; i < I; i++)
                 {
+                    if (_y[i] < value_type(0.0))
+                        continue;
+
                     const auto g_AA_ij = g_AA(i, j);
                     const auto g_Aa_ij = g_Aa(i, j);
                     const auto g_aa_ij = g_aa(i, j);
@@ -311,6 +335,7 @@ namespace jade
                     << " columns; expected column vector";
 
             const auto I = q.get_height();
+            assert(I > 0);
 
             if (years.get_height() != I)
                 throw jade::error()
@@ -321,12 +346,19 @@ namespace jade
             matrix_type out (I, 1);
 
             const auto max_value = years.get_max_value();
+            const auto min_value = years.get_min_value();
+            const auto avg_value = years.get_sum() / value_type(I);
             const auto years_end = years.get_data() + I;
             auto       years_ptr = years.get_data();
             auto       out_ptr   = out.get_data();
 
             while (years_ptr != years_end)
-                *out_ptr++ = (max_value - *years_ptr++) / max_value;
+            {
+                const auto y = *years_ptr++;
+                *out_ptr++ = y < value_type(0.0)
+                    ? value_type(1.0)
+                    : (avg_value - y) / std::max(max_value - y, y - min_value);
+            }
 
             return out;
         }
