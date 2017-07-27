@@ -19,14 +19,13 @@ ARGUMENTS
   year-matrix    path to the [I x 1] matrix for years
 
 OPTIONS
-  --steps,-s (30)   the number of steps to interpolate
-  --help,-h         shows this help message and exits
+  --help,-h      shows this help message and exits
 
 DESCRIPTION
   Performs a selection scan between ancient and modern data. The program can
   take advantage of the dating for each individual ancient sample. The program
-  prints for each marker the step number when local optima is reached, the
-  global likelihood, the optimal local likelihood, and the likelihood ratio.
+  prints for each marker the delta when local optima is reached, the global
+  likelihood, the optimal local likelihood, and the likelihood ratio.
 
   The program requires a <year-matrix>, which contains for each individual a
   row representing the number of years going backward in time. For instance,
@@ -36,7 +35,7 @@ DESCRIPTION
   [Notation]
 
   K := Number of Components
-     This value must be greater than or equal to two.
+     This value must be greater than or equal to one.
 
   I := Number of Individuals
      This value must be greater than or equal to two.
@@ -90,7 +89,7 @@ DESCRIPTION
   0.3  0.7  0.4  0.6
 
 EXAMPLE
-  $ neoscan --steps 3 g.dgm q.matrix f.matrix years.json
+  $ neoscan g.dgm q.matrix f.matrix years.json
   d       global-lle      local-lle       lle-ratio
   -1.00   +1.418028e+00   +1.418028e+00   +0.000000e+00
   +0.00   +1.769128e+00   +1.769128e+00   +0.000000e+00

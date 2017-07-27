@@ -64,7 +64,7 @@ namespace
         2.0
         )";
 
-    const auto expected_dgm_30 = []()
+    const auto expected_dgm = []()
     {
         queue_type out;
         out.push({ +6.400005e-01, -2.586994e+00, -1.735003e+00 });
@@ -74,7 +74,7 @@ namespace
         return out;
     }();
 
-    const auto expected_lgm_30 = []()
+    const auto expected_lgm = []()
     {
         queue_type out;
         out.push({ -1.999980e-01, -3.969019e-01, -1.667654e-01 });
@@ -96,9 +96,9 @@ namespace
         const matrix_type f (f_in);
         const matrix_type y (y_in);
 
-        neoscan_type neoscan (g, q, f, y, 30);
+        neoscan_type neoscan (g, q, f, y);
 
-        auto expected = expected_dgm_30;
+        auto expected = expected_dgm;
 
         neoscan.execute([&expected](const neoscan_type::output & actual)
         {
@@ -127,9 +127,9 @@ namespace
         const matrix_type f (f_in);
         const matrix_type y (y_in);
 
-        neoscan_type neoscan (g, q, f, y, 30);
+        neoscan_type neoscan (g, q, f, y);
 
-        auto expected = expected_lgm_30;
+        auto expected = expected_lgm;
 
         neoscan.execute([&expected](const neoscan_type::output & actual)
         {

@@ -90,13 +90,11 @@ namespace jade
                 const genotype_matrix_type & g,     ///< The G matrix.
                 const matrix_type          & q,     ///< The Q matrix.
                 const matrix_type          & f,     ///< The F matrix.
-                const matrix_type          & years, ///< The years matrix.
-                const size_t                 steps) ///< The number of steps.
+                const matrix_type          & years) ///< The years matrix.
             : _g     (g)
             , _q     (q)
             , _f     (f)
             , _y     (_init_y(years, q))
-            , _steps (steps)
             , _f_j   (f.get_height(), 1)
         {
             verification_type::validate_gqf_sizes(g, q, f);
@@ -169,11 +167,6 @@ namespace jade
         ///
         static void run(args & a)
         {
-            const auto steps = a.read("--steps", "-s", size_t(30));
-            if (steps < 1)
-                throw jade::error()
-                    << "invalid number of steps (" << steps << ")";
-
             const std::unique_ptr<genotype_matrix_type> g_ptr (
                 genotype_matrix_factory_type::create(a.pop<std::string>()));
 
@@ -184,7 +177,7 @@ namespace jade
 
             std::cout << "d\tglobal_lle\tlocal_lle\tlle_ratio\n";
 
-            const basic_neoscan neoscan (*g_ptr, q, f, y, steps);
+            const basic_neoscan neoscan (*g_ptr, q, f, y);
 
             neoscan.execute([](const output & out)
             {
@@ -389,7 +382,6 @@ namespace jade
         const matrix_type          & _q;     // [I x K]
         const matrix_type          & _f;     // [K x J]
         const matrix_type            _y;     // [I x 1]
-        const size_t                 _steps;
 
         // scratch space
         mutable matrix_type _f_j; // [K x 1]
