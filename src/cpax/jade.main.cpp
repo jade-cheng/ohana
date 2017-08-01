@@ -107,10 +107,10 @@ DESCRIPTION
      This value must be greater than or equal to one.
 
   I := Number of Individuals
-     This value must be greater than or equal to two.
+     This value must be greater than or equal to one.
 
   J := Number of Markers
-     This value must be greater than or equal to two.
+     This value must be greater than or equal to one.
 
   G := [I x J] Discrete or Likelihood Genotype Matrix
        dgm consists of integer values ranging from 0 to 3, inclusive.

@@ -43,9 +43,9 @@ namespace jade
                               << " is not square";
 
             const auto rk = c.get_height();
-            if (rk < 1)
+            if (0 == rk)
                 throw error() << "invalid C matrix size " << c.get_size_str()
-                              << " does not contain at least two components";
+                              << " does not contain any components";
 
             for (size_t y = 0; y < rk; y++)
                 for (size_t x = y + 1; x < rk; x++)
@@ -80,13 +80,13 @@ namespace jade
             const auto K = f.get_height();
             const auto J = f.get_width();
 
-            if (K < 1)
+            if (0 == K)
                 throw error() << "invalid F matrix size " << f.get_size_str()
-                              << " does not contain at least one component";
+                              << " does not contain any components";
 
-            if (J < 2)
+            if (0 == J)
                 throw error() << "invalid F matrix size " << f.get_size_str()
-                              << " does not contain at least two markers";
+                              << " does not contain any markers";
 
             for (size_t k = 0; k < K; k++)
             {
@@ -158,13 +158,13 @@ namespace jade
         static bool validate_g(
                 const genotype_matrix_type & g) ///< The G matrix to validate.
         {
-            if (g.get_height() < 2)
+            if (0 == g.get_height())
                 throw error() << "invalid G matrix size " << g.get_size_str()
-                              << " does not contain at least two individuals";
+                              << " does not contain any individuals";
 
-            if (g.get_width() < 2)
+            if (0 == g.get_width())
                 throw error() << "invalid G matrix size " << g.get_size_str()
-                              << " does not contain at least two markers";
+                              << " does not contain any markers";
 
             return true;
         }
@@ -228,13 +228,13 @@ namespace jade
             const auto I = q.get_height();
             const auto K = q.get_width();
 
-            if (I < 2)
+            if (0 == I)
                 throw error() << "invalid Q matrix size " << q.get_size_str()
-                              << " does not contain at least two individuals";
+                              << " does not contain any individuals";
 
-            if (K < 1)
+            if (0 == K)
                 throw error() << "invalid Q matrix size " << q.get_size_str()
-                              << " does not contain at least one component";
+                              << " does not contain any components";
 
             for (size_t i = 0; i < I; i++)
             {

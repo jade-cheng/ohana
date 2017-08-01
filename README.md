@@ -30,7 +30,7 @@ Once configured, we run `make` to build the software and optionally run `make in
 
 ### convert
 
-To facilitate different stages of the analysis, we provide several conversion subroutines. `ped2dgm` converts genotype observations from the plink format to feed into `qpas`. `bgl2lgm` converts genotype likelihoods from the beagle format to feed into `qpas`. `cov2nwk` first converts a covariance matrix to a distance matrix, then it implements the Neighbor Joining algorithm to approximate the distance matrix into a Newick tree. `nwk2svg` produces a scalar vector graphics representation of the Newcik tree.  The output can be viewed with web browsers and modified with graphics editors like Inkscape.  Finally, if a tree-compatible covariance matrix is desired for `selscan`, we have `nwk2cov` to converts a Newick tree to a covariance matrix.
+To facilitate different stages of the analysis, we provide several conversion subroutines. `ped2dgm` converts genotype observations from the plink format to feed into `qpas`. `bgl2lgm` converts genotype likelihoods from the beagle format to feed into `qpas`. `cov2nwk` first converts a covariance matrix to a distance matrix, then it implements the Neighbor Joining algorithm to approximate the distance matrix into a Newick tree. `nwk2svg` produces a scalar vector graphics representation of the Newick tree.  The output can be viewed with web browsers and modified with graphics editors like Inkscape.  Finally, if a tree-compatible covariance matrix is desired for `selscan`, we have `nwk2cov` to converts a Newick tree to a covariance matrix.
 
 ### qpas and cpax
 
