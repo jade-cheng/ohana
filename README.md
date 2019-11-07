@@ -69,6 +69,7 @@ We denote `C` as the covariance matrix to be inferred.  We denote the allele fre
 
 We scan for covariance outliers by applying a likelihood model to each locus, similar to the one used genome-wide but with certain scalar factor variations. This creates a nested likelihood model.  Through a likelihood ratio test, it identifies loci in which the variance among components is larger than expected from the genome-wide estimated covariance matrix.
 
+This program takes two input matrices, the `c matrix` and `c-scale matrix`.  These two matrices provide the minimum and maximum values of the optimization and the interpolation is used to define how to optimize multiple values at the same time using a single parameter.  In this way the same framework can be used for both optimization of additive and multiplicative models.  If `-cs` option is not supplied, by default, the programs uses a `c-scale matrix` that is 10 times of the `c matrix`.
 
 ## Workflow
 
