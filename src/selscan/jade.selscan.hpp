@@ -74,7 +74,14 @@ namespace jade
         ///
         void execute()
         {
-            std::cout << "step\tglobal-lle\tlocal-lle\tlle-ratio\n";
+            const auto K = fa.get_height();
+
+            std::cout << "step\tlle-ratio\tglobal-lle\tlocal-lle";
+
+            for (size_t k = 0; k < K; k++)
+                std::cout << "\t" << "f-pop" << k;
+
+            std::cout << std::endl;
 
             std::vector<record> records;
             records.reserve(J);
@@ -86,10 +93,17 @@ namespace jade
                     r.update(si, _compute_score(si, r.get_j()));
 
             for (const auto & r : records)
+            {
                 std::cout << r.get_step()                << '\t'
+                          << _format(r.get_lle_ratio())  << '\t'
                           << _format(r.get_score())      << '\t'
-                          << _format(r.get_best_score()) << '\t'
-                          << _format(r.get_lle_ratio())  << '\n';
+                          << _format(r.get_best_score());
+
+                for (size_t k = 0; k < K; k++)
+                    std::cout << '\t' << _format(fa(k, r.get_j()));
+
+                std::cout << std::endl;
+            }
         }
 
     private:
