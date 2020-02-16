@@ -1,6 +1,6 @@
 /* -------------------------------------------------------------------------
    Ohana
-   Copyright (c) 2015-2017 Jade Cheng                            (\___/)
+   Copyright (c) 2015-2020 Jade Cheng                            (\___/)
    Jade Cheng <info@jade-cheng.com>                              (='.'=)
    ------------------------------------------------------------------------- */
 
@@ -127,7 +127,7 @@ EXAMPLES
 BUGS
   Report any bugs to Jade Cheng <info@jade-cheng.com>.
 
-Copyright (c) 2015-2017 Jade Cheng
+Copyright (c) 2015-2020 Jade Cheng
 )";
 }
 

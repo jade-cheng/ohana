@@ -250,7 +250,7 @@ We then produce admixture-corrected allele frequencies and perform the selection
 The file `scan_all.txt` contains selection results for the full dataset with markers following the order defined in HGDP.ped.
 
 ## License
-Copyright (c) 2015-2017 Jade Cheng<br>
+Copyright (c) 2015-2020 Jade Cheng<br>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
