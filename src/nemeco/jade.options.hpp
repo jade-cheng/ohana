@@ -44,7 +44,6 @@ namespace jade
             , _epsilon        (a.read("--epsilon", "-e", no_epsilon))
             , _max_iterations (a.read("--max-iterations", "-mi", no_iterations))
             , _max_time       (a.read("--max-time", "-mt", no_time))
-            , _num_threads    (a.read("--num-threads", "-nt", size_t(1)))
             , _tin            (a.read<std::string>("--tin", "-ti"))
             , _tout           (a.read<std::string>("--tout", "-to"))
         {
@@ -55,11 +54,6 @@ namespace jade
             if (is_max_time_specified() && _max_time < 0.0)
                 throw error()
                       << "invalid value for --max-time option: " << _max_time;
-
-            if (_num_threads == 0)
-                throw error()
-                      << "invalid number of threads specified for --num-threads"
-                      << "option: " << _num_threads;
 
             if (is_max_iterations_specified() && _max_iterations == 0)
                 throw error()
@@ -129,14 +123,6 @@ namespace jade
         {
             assert(is_max_time_specified());
             return _max_time;
-        }
-
-        ///
-        /// \return The number of threads for the CBLAS/LAPACK libraries.
-        ///
-        inline size_t get_num_threads() const
-        {
-            return _num_threads;
         }
 
         ///
@@ -228,7 +214,6 @@ namespace jade
         value_type  _epsilon;
         size_t      _max_iterations;
         double      _max_time;
-        size_t      _num_threads;
         std::string _tin;
         std::string _tout;
     };

@@ -71,8 +71,6 @@ namespace jade
 
             a.validate_empty();
 
-            openblas_set_num_threads(int(_opts.get_num_threads()));
-
             _rf = create_rf(_f);
             _mu = g.create_mu();
 

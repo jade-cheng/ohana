@@ -54,9 +54,6 @@ OPTIONS
   --max-time,-mt                indicates the next argument is the maximum time
                                 in seconds to execute the algorithm; this value
                                 must be greater than or equal to zero
-  --num-threads,-nt (1)         indicates the next argument is the number of
-                                threads to request for OpenBLAS operations;
-                                this value must be greater than zero
   --qin,-qi                     indicates the next argument is the path to the
                                 initial Q matrix
   --qout,-qo                    indicates the next argument is the path to the

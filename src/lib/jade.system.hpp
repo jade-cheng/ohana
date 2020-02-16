@@ -29,11 +29,21 @@
 #include <stdexcept>
 #include <string>
 
-#include <cblas.h>
-#include <lapacke.h>
+#if defined(JADE_USE_ACCELERATE_FRAMEWORK)
+   #include <Accelerate/Accelerate.h>
+#elif defined(JADE_USE_NETLIB_PACKAGES)
+   #include <cblas.h>
+   #include <lapacke.h>
+#else
+   #error Unsupported build environment
+#endif
 
 #ifdef I
 #undef I
+#endif
+
+#ifdef assert
+#undef assert
 #endif
 
 #endif // JADE_SYSTEM_HPP__

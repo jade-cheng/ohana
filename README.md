@@ -8,23 +8,31 @@ This project is directed by [Dr. Rasmus Nielsen](http://www.nielsenlab.org/) at 
 
 ## Installation
 
-The `Ohana` source code is available on [github](https://github.com/jade-cheng/ohana):
+The `Ohana` source code is available on [github](https://github.com/jade-cheng/ohana). Building `Ohana` from source requires a UNIX development environment with [Make](https://www.gnu.org/software/make/), a [C++ compiler](https://gcc.gnu.org/), and [BLAS](http://www.netlib.org/blas/)/[LAPACK](http://www.netlib.org/lapack/) libraries.
+
+On macOS, the BLAS/LAPACK libraries come preinstalled with the operating system through the [Accelerate Framework](https://developer.apple.com/documentation/accelerate), so no prerequisite steps are required beyond installing Xcode, which provides the necessary tools to build software from the terminal. See [Apple&rsquo;s documentation](https://developer.apple.com/xcode/) for more information.
+
+On Linux, the development tools and libraries may need to be installed explicitly. For example, on Debian-based systems, these packages should be installed:
+
+    # Debian/Ubuntu distributions only:
+    $ sudo apt install git make g++ libblas-dev liblapacke-dev
+
+Once the development environment is prepared, `Ohana` can be downloaded and built by following these steps:
 
     $ git clone https://github.com/jade-cheng/ohana
-
-Building `Ohana` from source requires a typical UNIX development environment, a C++11 compiler, and an installation of [OpenBLAS](http://www.openblas.net/).  Before running `make`, we specify the path to OpenBLAS in the file `configure.mk` located in the root of this source tree.  For example, Ubuntu typically installs OpenBLAS into the `/opt/OpenBLAS` directory, and the corresponding settings would be:
-
-    $ cat ./configure.mk
-    CXX            = g++
-    OPENBLAS       = /opt/OpenBLAS
-    INSTALL_PREFIX = /opt/ohana
-
-Once configured, we run `make` to build the software and optionally run `make install` to copy the output files into `$INSTALL_PREFIX/bin` directory.
-
+    $ cd ./ohana
     $ make
-    :
-    $ ls ./bin/
-    convert   cpax   nemeco   qpas   selscan
+
+This creates several programs in the `./bin/*` directory, which are described in later sections of this documentation.
+
+    $ ls ./bin
+    convert
+    cpax
+    filter
+    nemeco
+    neoscan
+    qpas
+    selscan
 
 ## Description
 

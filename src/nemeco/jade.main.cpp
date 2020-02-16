@@ -36,9 +36,6 @@ OPTIONS
   --max-time,-mt                indicates the next argument is the maximum time
                                 in seconds to execute the algorithm; this value
                                 must be greater than or equal to zero
-  --num-threads,-nt (1)         indicates the next argument is the number of
-                                threads to request for OpenBLAS operations;
-                                this value must be greater than zero
   --tin, -ti                    indicates the next argument is the path to the
                                 file that defines the input tree structure; the
                                 file is in Newick format; this option cannot

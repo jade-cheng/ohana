@@ -1,13 +1,22 @@
 all: release
 
-include configure.mk
+CXX            = g++
+INSTALL_PREFIX = /opt/ohana
 
 CXXFLAGS  = -std=c++11 -pedantic
 CXXFLAGS += -Wall -Weffc++ -Wextra -Wcast-align -Wconversion
 CXXFLAGS += -Wfloat-equal -Wformat=2 -Wmissing-declarations
 CXXFLAGS += -Woverlength-strings -Wshadow -Wunreachable-code
-CXXFLAGS += -isystem $(OPENBLAS)/include
-LDFLAGS   = -L$(OPENBLAS)/lib -lopenblas
+
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Darwin)
+	CXXFLAGS += -DJADE_USE_ACCELERATE_FRAMEWORK
+	LDFLAGS  += -framework Accelerate
+else
+	CXXFLAGS += -DJADE_USE_NETLIB_PACKAGES
+	LDFLAGS  += -lblas -llapacke
+endif
 
 RELEASE_CXXFLAGS = $(CXXFLAGS) -DNDEBUG -O3 -msse -msse2 -msse3 -mfpmath=sse
 RELEASE_LDFLAGS  = $(LDFLAGS)

@@ -53,7 +53,6 @@ namespace jade
             , _ksize          (a.read("--ksize", "-k", no_ksize))
             , _max_iterations (a.read("--max-iterations", "-mi", no_max_iterations))
             , _max_time       (a.read("--max-time", "-mt", no_max_time))
-            , _num_threads    (a.read("--num-threads", "-nt", size_t(1)))
             , _qin            (a.read<std::string>("--qin", "-qi"))
             , _qout           (a.read<std::string>("--qout", "-qo"))
             , _seed           (a.read("--seed", "-s", std::random_device()()))
@@ -116,10 +115,6 @@ namespace jade
                         << "invalid specification of --fixed-f, --fin, "
                         << "and --frequency-bounds options";
             }
-
-            if (_num_threads == 0)
-                throw error() << "invalid number of threads specified for "
-                              << "--num-threads option: " << _num_threads;
         }
 
         ///
@@ -192,14 +187,6 @@ namespace jade
         {
             assert(is_max_time_specified());
             return _max_time;
-        }
-
-        ///
-        /// \return The number of threads value.
-        ///
-        inline size_t get_num_threads() const
-        {
-            return _num_threads;
         }
 
         ///
@@ -350,7 +337,6 @@ namespace jade
         const size_t      _ksize;
         const size_t      _max_iterations;
         const double      _max_time;
-        const size_t      _num_threads;
         const std::string _qin;
         const std::string _qout;
         const seed_type   _seed;

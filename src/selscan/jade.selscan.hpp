@@ -120,7 +120,7 @@ namespace jade
             typedef std::numeric_limits<value_type> limits_type;
             static const auto lowest = limits_type::lowest();
 
-            typedef typename matrix_type::openblas_type openblas_type;
+            typedef typename matrix_type::blas_type blas_type;
 
             const auto percent = value_type(si) / value_type(steps - 1);
             for (size_t i = 0; i < RK * RK; i++)
@@ -143,19 +143,19 @@ namespace jade
             // where alpha and beta are scalars, x and y are vectors, and A is
             // an m-by-n matrix.
             //
-            openblas_type::gemv(
-                CblasRowMajor,                   // Layout
-                CblasNoTrans,                    // transa
-                blasint(c_inv.get_height()),     // m
-                blasint(c_inv.get_width()),      // n
-                1.0,                             // alpha
-                c_inv.get_data(),                // A
-                blasint(c_inv.get_width()),      // lda
-                rooted_fa.get_data() + j,        // x
-                blasint(rooted_fa.get_width()),  // incx
-                0.0,                             // beta
-                f_j_c_inv.get_data(),            // y
-                blasint(f_j_c_inv.get_width())); // yinc
+            blas_type::gemv(
+                CblasRowMajor,               // Layout
+                CblasNoTrans,                // transa
+                int(c_inv.get_height()),     // m
+                int(c_inv.get_width()),      // n
+                1.0,                         // alpha
+                c_inv.get_data(),            // A
+                int(c_inv.get_width()),      // lda
+                rooted_fa.get_data() + j,    // x
+                int(rooted_fa.get_width()),  // incx
+                0.0,                         // beta
+                f_j_c_inv.get_data(),        // y
+                int(f_j_c_inv.get_width())); // yinc
 
             //
             // The ?dot routines perform a vector-vector reduction operation
@@ -165,12 +165,12 @@ namespace jade
             //
             // where x_i and y_i are elements of vectors x and y.
             //
-            const auto dot = openblas_type::dot(
-                blasint(f_j_c_inv.get_height()), // n (height = RK)
-                rooted_fa.get_data() + j,        // x
-                blasint(rooted_fa.get_width()),  // xinc (width = 1)
-                f_j_c_inv.get_data(),            // y
-                blasint(f_j_c_inv.get_width())); // yinc (width = 1)
+            const auto dot = blas_type::dot(
+                int(f_j_c_inv.get_height()), // n (height = RK)
+                rooted_fa.get_data() + j,    // x
+                int(rooted_fa.get_width()),  // xinc (width = 1)
+                f_j_c_inv.get_data(),        // y
+                int(f_j_c_inv.get_width())); // yinc (width = 1)
 
             static const auto pi  = value_type(std::acos(-1.0));
             static const auto tau = value_type(2) * pi;

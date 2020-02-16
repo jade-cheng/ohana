@@ -7,8 +7,9 @@
 #ifndef JADE_MATRIX_HPP__
 #define JADE_MATRIX_HPP__
 
+#include "jade.blas.hpp"
 #include "jade.error.hpp"
-#include "jade.openblas.hpp"
+#include "jade.lapack.hpp"
 
 namespace jade
 {
@@ -22,8 +23,11 @@ namespace jade
         /// The value type.
         typedef TValue value_type;
 
-        /// The OpenBLAS type.
-        typedef basic_openblas<value_type> openblas_type;
+        /// The BLAS type.
+        typedef basic_blas<value_type> blas_type;
+
+        /// The LAPACK type.
+        typedef basic_lapack<value_type> lapack_type;
 
         /// The initializer list type.
         typedef std::initializer_list<
@@ -462,21 +466,21 @@ namespace jade
             assert(lhs.get_width() == rhs.get_height());
             assert(dst.is_size(lhs.get_height(), rhs.get_width()));
 
-            openblas_type::gemm(
-                CblasRowMajor,             // Layout
-                CblasNoTrans,              // transa
-                CblasNoTrans,              // transb
-                blasint(lhs.get_height()), // m
-                blasint(rhs.get_width()),  // n
-                blasint(lhs.get_width()),  // k
-                alpha,                     // alpha
-                lhs.get_data(),            // a
-                blasint(lhs.get_width()),  // lda
-                rhs.get_data(),            // b
-                blasint(rhs.get_width()),  // ldb
-                beta,                      // beta
-                dst.get_data(),            // c
-                blasint(dst.get_width())); // ldc
+            blas_type::gemm(
+                CblasRowMajor,         // Layout
+                CblasNoTrans,          // transa
+                CblasNoTrans,          // transb
+                int(lhs.get_height()), // m
+                int(rhs.get_width()),  // n
+                int(lhs.get_width()),  // k
+                alpha,                 // alpha
+                lhs.get_data(),        // a
+                int(lhs.get_width()),  // lda
+                rhs.get_data(),        // b
+                int(rhs.get_width()),  // ldb
+                beta,                  // beta
+                dst.get_data(),        // c
+                int(dst.get_width())); // ldc
         }
 
         ///
@@ -496,18 +500,18 @@ namespace jade
 
             assert(cx > cy);
 
-            std::vector<lapack_int> ipiv;
+            std::vector<int> ipiv;
             ipiv.resize(cy);
 
-            return 0 == openblas_type::gesv(
-                    LAPACK_ROW_MAJOR,    // matrix_layout
-                    lapack_int(cy),      // n
-                    lapack_int(cx - cy), // nrhs
-                    get_data(),          // a
-                    lapack_int(cx),      // lda
-                    ipiv.data(),         // ipiv
-                    get_data() + cy,     // b
-                    lapack_int(cx));     // ldb
+            return 0 == lapack_type::gesv(
+                    lapack_type::row_major, // layout
+                    int(cy),                // n
+                    int(cx - cy),           // nrhs
+                    get_data(),             // a
+                    int(cx),                // lda
+                    ipiv.data(),            // ipiv
+                    get_data() + cy,        // b
+                    int(cx));               // ldb
         }
 
         ///
@@ -1016,14 +1020,14 @@ namespace jade
             assert(is_square());
             assert(!is_empty());
 
-            const auto result = openblas_type::potrf(
-                LAPACK_ROW_MAJOR,         // matrix_layout
-                'L',                      // uplo
-                lapack_int(get_height()), // n
-                get_data(),               // a
-                lapack_int(get_width())); // lda
+            const auto n = int(get_width());
 
-            return 0 == result;
+            return 0 == lapack_type::potrf(
+                lapack_type::row_major, // layout
+                'L',                    // uplo
+                n,                      // n
+                get_data(),             // a
+                n);                     // lda
         }
 
         ///
@@ -1037,14 +1041,14 @@ namespace jade
             assert(is_square());
             assert(!is_empty());
 
-            const auto result = openblas_type::potri(
-                LAPACK_ROW_MAJOR,         // matrix_layout
-                'L',                      // uplo
-                lapack_int(get_height()), // n
-                get_data(),               // a
-                lapack_int(get_width())); // lda
+            const auto n = int(get_width());
 
-            return 0 == result;
+            return 0 == lapack_type::potri(
+                lapack_type::row_major, // layout
+                'L',                    // uplo
+                n,                      // n
+                get_data(),             // a
+                n);                     // lda
         }
 
         ///
