@@ -42,6 +42,7 @@ namespace jade
         explicit basic_selscan(
                 args & a) ///< The command-line arguments.
             : steps     (a.read("--steps", "-s", size_t(100)))
+            , f_epsilon (_read_f_epsilon(a))
             , g_ptr     (genotype_matrix_factory_type::create(a.pop<std::string>()))
             , g         (*g_ptr)
             , fa        (a.pop<std::string>())
@@ -49,7 +50,7 @@ namespace jade
             , c2        (_init_scaling_matrix(a, c1))
             , RK        (c1.get_width())
             , J         (g.get_width())
-            , mu        (g.create_mu())
+            , mu        (g.create_mu(f_epsilon))
             , rooted_fa (_compute_rooted_fa(fa))
             , c_inv     (RK, RK)
             , f_j_c_inv (RK, 1)
@@ -215,6 +216,19 @@ namespace jade
         }
 
         // --------------------------------------------------------------------
+        static value_type _read_f_epsilon(args & a)
+        {
+            const auto out = a.read("--f-epsilon", "-fe", value_type(1.0e-6));
+
+            if (!(out > value_type(0.0) && out < value_type(0.1)))
+                throw error()
+                    << "invalid value for --f-epsilon option: "
+                    << out;
+
+            return out;
+        }
+
+        // --------------------------------------------------------------------
         class record
         {
         public:
@@ -278,6 +292,7 @@ namespace jade
         };
 
         const size_t                 steps;
+        const value_type             f_epsilon;
         const genotype_matrix_ptr    g_ptr;
         const genotype_matrix_type & g;
         const matrix_type            fa;

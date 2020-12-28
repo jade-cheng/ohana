@@ -29,6 +29,11 @@ OPTIONS
                                 value; i.e. the minimum difference between
                                 likelihood; this value must be greater than or
                                 equal to zero
+  --f-epsilon,-fe               indicates the next argument is the epsilon used
+                                to clamp values of the allele frequency matrix
+                                between (0 + fe) and (1 - fe); if unspecified,
+                                this value defaults to 1.0e-6; the value must
+                                be greater than 0.0 and less than 0.1
   --help,-h                     shows this help message
   --max-iterations,-mi          indicates the next argument is the maximum
                                 number of iterations to execute the algorithm;

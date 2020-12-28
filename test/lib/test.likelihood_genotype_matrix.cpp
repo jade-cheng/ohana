@@ -277,7 +277,7 @@ namespace
         )");
 
         const auto expect = matrix_type(mu_in);
-        const auto actual = lgm_type(matrix_in).create_mu();
+        const auto actual = lgm_type(matrix_in).create_mu(1.0e-6);
 
         TEST_EQUAL(expect.get_width(),  actual.get_width());
         TEST_EQUAL(expect.get_height(), actual.get_height());

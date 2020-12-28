@@ -124,7 +124,6 @@ namespace jade
                     f_dst(k, j) = f_column[k] + delta_vec[k];
             }
 
-            f_dst.clamp(min, max);
             return f_dst;
         }
 
@@ -197,6 +196,9 @@ namespace jade
                 for (size_t k = 0; k < K; k++)
                     q_dst(i, k) = q_row[k] + delta_vec[k];
 
+                static const auto epsilon = value_type(1.0e-6);
+                static const auto min     = value_type(0.0) + epsilon;
+                static const auto max     = value_type(1.0) - epsilon;
                 q_dst.clamp_row(i, min, max);
 
                 const auto sum = q_dst.get_row_sum(i);
@@ -207,9 +209,6 @@ namespace jade
         }
 
     private:
-        static constexpr auto min = value_type(0.000001);
-        static constexpr auto max = value_type(0.999999);
-
         // --------------------------------------------------------------------
         static matrix_type _create_b_vec(
                 const matrix_type & current_values,

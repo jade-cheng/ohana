@@ -112,9 +112,14 @@ namespace jade
                         : _rnd.randomize_q(n ,k);
 
             if (_opts.is_fin_force_specified())
-                _f = _rnd.randomize_f(k, _g->create_mu(), *_fif);
+                _f = _rnd.randomize_f(
+                    k,
+                    _g->create_mu(_opts.get_f_epsilon()),
+                    *_fif);
             else if (!_opts.is_fin_specified())
-                _f = _rnd.randomize_f(k, _g->create_mu());
+                _f = _rnd.randomize_f(
+                    k,
+                    _g->create_mu(_opts.get_f_epsilon()));
 
             verification_type::validate_gqf_sizes(*_g, _q, _f);
 

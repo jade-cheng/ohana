@@ -76,8 +76,8 @@ namespace jade
             {
                 import_params(params);
                 auto sum = value_type(0);
-                for (const auto a0 : _table)
-                for (const auto b0 : _table)
+                for (const auto & a0 : _table)
+                for (const auto & b0 : _table)
                 if (a0.first != b0.first)
                 {
                     const auto a = a0.second.position;

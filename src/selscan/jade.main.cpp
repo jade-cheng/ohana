@@ -18,12 +18,16 @@ ARGUMENTS
   c-matrix     path to the [K-1 x K-1] global C matrix
 
 OPTIONS
-  --steps,-s (100)   the number of steps to interpolate between C matrices
-  --help,-h          shows this help message and exits
   --c-scale,-cs      indicates the next argument is the path to a [K-1 x K-1] C
                      matrix that provides scaling information; each step
                      linearly interpolates between the global C matrix and this
                      matrix
+  --f-epsilon,-fe    indicates the next argument is the epsilon used to clamp
+                     values of the allele frequency matrix between (0 + fe) and
+                     (1 - fe); if unspecified, this value defaults to 1.0e-6;
+                     the value must be greater than 0.0 and less than 0.1
+  --help,-h          shows this help message and exits
+  --steps,-s (100)   the number of steps to interpolate between C matrices
 
 DESCRIPTION
   Performs a selection scan to identify covariance outliers and prints for each

@@ -134,7 +134,6 @@ namespace jade
                 }
             }
 
-            f_dst.clamp(min, max);
             return f_dst;
         }
 
@@ -217,6 +216,9 @@ namespace jade
                         q_dst(i, k) = q_row[k];
                 }
 
+                static const auto epsilon = value_type(1.0e-6);
+                static const auto min     = value_type(0.0) + epsilon;
+                static const auto max     = value_type(1.0) - epsilon;
                 q_dst.clamp_row(i, min, max);
 
                 const auto sum = q_dst.get_row_sum(i);
@@ -227,9 +229,6 @@ namespace jade
         }
 
     private:
-        static constexpr auto min = value_type(0.000001);
-        static constexpr auto max = value_type(0.999999);
-
         // --------------------------------------------------------------------
         static matrix_type _create_a_mat(
                 const size_t K,

@@ -46,6 +46,7 @@ namespace jade
         explicit basic_options(
                 args & a) ///< The command-line arguments.
             : _epsilon        (a.read("--epsilon", "-e", no_epsilon))
+            , _f_epsilon      (a.read("--f-epsilon", "-fe", value_type(1.0e-6)))
             , _fin            (a.read<std::string>("--fin", "-fi"))
             , _fin_force      (a.read<std::string>("--fin-force", "-fif"))
             , _force          (a.read<std::string>("--force", "-fg"))
@@ -65,6 +66,14 @@ namespace jade
                 throw error()
                     << "invalid value for --epsilon option: "
                     << _epsilon;
+
+            if (!(_f_epsilon > value_type(0.0) &&
+                  _f_epsilon < value_type(0.1)))
+            {
+                throw error()
+                    << "invalid value for --f-epsilon option: "
+                    << _f_epsilon;
+            }
 
             if (is_ksize_specified() && _ksize < 2)
                 throw error()
@@ -124,6 +133,14 @@ namespace jade
         {
             assert(is_epsilon_specified());
             return _epsilon;
+        }
+
+        ///
+        /// \return The F epsilon value.
+        ///
+        inline value_type get_f_epsilon() const
+        {
+            return _f_epsilon;
         }
 
         ///
@@ -330,6 +347,7 @@ namespace jade
     private:
         // options with arguments
         const value_type  _epsilon;
+        const value_type  _f_epsilon;
         const std::string _fin;
         const std::string _fin_force;
         const std::string _force;

@@ -42,6 +42,7 @@ namespace jade
             , _cin            (a.read<std::string>("--cin", "-ci"))
             , _cout           (a.read<std::string>("--cout", "-co"))
             , _epsilon        (a.read("--epsilon", "-e", no_epsilon))
+            , _f_epsilon      (a.read("--f-epsilon", "-fe", value_type(1.0e-6)))
             , _max_iterations (a.read("--max-iterations", "-mi", no_iterations))
             , _max_time       (a.read("--max-time", "-mt", no_time))
             , _tin            (a.read<std::string>("--tin", "-ti"))
@@ -50,6 +51,14 @@ namespace jade
             if (is_epsilon_specified() && _epsilon < value_type(0))
                 throw error()
                       << "invalid value for --epsilon option: " << _epsilon;
+
+            if (!(_f_epsilon > value_type(0.0) &&
+                  _f_epsilon < value_type(0.1)))
+            {
+                throw error()
+                    << "invalid value for --f-epsilon option: "
+                    << _f_epsilon;
+            }
 
             if (is_max_time_specified() && _max_time < 0.0)
                 throw error()
@@ -105,6 +114,14 @@ namespace jade
         {
             assert(is_epsilon_specified());
             return _epsilon;
+        }
+
+        ///
+        /// \return The F epsilon value.
+        ///
+        inline value_type get_f_epsilon() const
+        {
+            return _f_epsilon;
         }
 
         ///
@@ -212,6 +229,7 @@ namespace jade
         std::string _cin;
         std::string _cout;
         value_type  _epsilon;
+        value_type  _f_epsilon;
         size_t      _max_iterations;
         double      _max_time;
         std::string _tin;

@@ -421,11 +421,15 @@ namespace jade
         ///
         /// \return A new mu matrix.
         ///
-        virtual matrix_type create_mu() const override
+        virtual matrix_type create_mu(
+            const value_type f_epsilon) ///< The F matrix boundary epsilon.
+            const override
         {
             static const auto em_iterations = size_t(100);
             static const auto em_epsilon    = value_type(1.0e-6);
-            static const auto mu_epsilon    = value_type(1.0e-6);
+
+            const auto f_min = value_type(0.0) + f_epsilon;
+            const auto f_max = value_type(1.0) - f_epsilon;
 
             const auto I = get_height();
             const auto J = get_width();
@@ -454,9 +458,9 @@ namespace jade
 
                     const auto previous_mu_j = mu_j;
                     mu_j = std::min(std::max(
-                        value_type(0.0) + mu_epsilon,
+                        f_min,
                         sum / value_type(I)),
-                        value_type(1.0) - mu_epsilon);
+                        f_max);
 
                     if (std::fabs(previous_mu_j - mu_j) <= em_epsilon)
                         break;

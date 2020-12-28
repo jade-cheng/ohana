@@ -72,7 +72,7 @@ namespace jade
             a.validate_empty();
 
             _rf = create_rf(_f);
-            _mu = g.create_mu();
+            _mu = g.create_mu(_opts.get_f_epsilon());
 
             //
             // If the user specifies the C matrix, read it from the file; if

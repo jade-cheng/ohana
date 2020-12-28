@@ -50,6 +50,8 @@ namespace jade
             q0.swap(q);
             f0.swap(fa);
 
+            _clamp_f(settings, fa);
+
             const auto & opts = settings.get_options();
             const auto   fg   = settings.get_fg();
             const auto   fif  = settings.get_fif();
@@ -89,6 +91,7 @@ namespace jade
                 if (!opts.is_fixed_f())
                 {
                     fa = improver_type::improve_f(g, q, fa, fb, qfa, qfb, fif, frb);
+                    _clamp_f(settings, fa);
                     _compute_fb(fa, fb);
                     matrix_type::gemm(q, fa, qfa);
                     matrix_type::gemm(q, fb, qfb);
@@ -110,6 +113,15 @@ namespace jade
         }
 
     private:
+        // --------------------------------------------------------------------
+        static void _clamp_f(const settings_type & settings, matrix_type & f)
+        {
+            const auto epsilon = settings.get_options().get_f_epsilon();
+            const auto min     = value_type(0.0) + epsilon;
+            const auto max     = value_type(1.0) - epsilon;
+            f.clamp(min, max);
+        }
+
         // --------------------------------------------------------------------
         static void _compute_fb(const matrix_type & fa, matrix_type & fb)
         {

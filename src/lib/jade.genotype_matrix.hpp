@@ -114,7 +114,9 @@ namespace jade
         ///
         /// \return A new mu matrix.
         ///
-        virtual matrix_type create_mu() const = 0;
+        virtual matrix_type create_mu(
+            const value_type f_epsilon) ///< The F matrix boundary epsilon.
+            const = 0;
 
         ///
         /// \return The height of the matrix.

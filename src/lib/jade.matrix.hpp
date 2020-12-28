@@ -105,7 +105,7 @@ namespace jade
                     return row_values.size() == _cx; }));
 
             _m.reserve(_cy * _cx);
-            for (const auto row : values)
+            for (const auto & row : values)
                 for (const auto n : row)
                     _m.push_back(n);
         }
