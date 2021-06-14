@@ -4,7 +4,7 @@
 
 `Ohana` is a suite of software for analyzing population structure and admixture history using unsupervised learning methods.  We construct statistical models to infer individual clustering from which we identify outliers for selection analyses.
 
-This project is directed by [Dr. Rasmus Nielsen](https://nielsen-lab.github.io/research/) at University of California Berkeley.  [Jade Cheng](http://www.jade-cheng.com/) is funded by the Bioinformatics, Computer Science Department at Aarhus University and the Natural History Museum of Denmark at Copenhagen University.
+This project was directed by [Dr. Rasmus Nielsen](https://nielsen-lab.github.io/research/) at University of California Berkeley.  [Jade Cheng](http://www.jade-cheng.com/) was funded by the Bioinformatics, Computer Science Department at Aarhus University and the Natural History Museum of Denmark at Copenhagen University.
 
 ## About me
 
